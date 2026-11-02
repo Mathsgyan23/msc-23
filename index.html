@@ -467,22 +467,25 @@
     if (tabIndex === 3) laDrawU4();
   }
 
-  function laDrawU1() {
-  function laDrawU1() {
+  
+    function laDrawU1() {
     const canvas = document.getElementById('laCanvas1');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const mode = document.getElementById('la-u1-mode') ? document.getElementById('la-u1-mode').value : 'kernel';
+
+    const modeEl = document.getElementById('la-u1-mode');
+    const mode = modeEl ? modeEl.value : 'kernel';
 
     const matCtrls = document.getElementById('la-u1-matrix-ctrls');
     const dualCtrls = document.getElementById('la-u1-dual-ctrls');
-    if (matCtrls && dualCtrls) {
-      matCtrls.style.display = (mode === 'kernel') ? 'flex' : 'none';
-      dualCtrls.style.display = (mode !== 'kernel') ? 'flex' : 'none';
-    }
+    const resEl = document.getElementById('la-u1-res');
+
+    if (matCtrls) matCtrls.style.display = (mode === 'kernel') ? 'flex' : 'none';
+    if (dualCtrls) dualCtrls.style.display = (mode !== 'kernel') ? 'flex' : 'none';
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const cx = canvas.width / 2, cy = canvas.height / 2;
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
 
     // Coordinate Axes
     ctx.strokeStyle = '#334155';
@@ -493,23 +496,30 @@
     ctx.stroke();
 
     if (mode === 'kernel') {
-      const a = parseFloat(document.getElementById('la-t00').value) || 0;
-      const b = parseFloat(document.getElementById('la-t01').value) || 0;
-      const c = parseFloat(document.getElementById('la-t10').value) || 0;
-      const d = parseFloat(document.getElementById('la-t11').value) || 0;
+      const el00 = document.getElementById('la-t00');
+      const el01 = document.getElementById('la-t01');
+      const el10 = document.getElementById('la-t10');
+      const el11 = document.getElementById('la-t11');
+
+      const a = el00 ? parseFloat(el00.value) || 0 : 0;
+      const b = el01 ? parseFloat(el01.value) || 0 : 0;
+      const c = el10 ? parseFloat(el10.value) || 0 : 0;
+      const d = el11 ? parseFloat(el11.value) || 0 : 0;
 
       const det = a * d - b * c;
       const rank = (a === 0 && b === 0 && c === 0 && d === 0) ? 0 : (det !== 0 ? 2 : 1);
       const nullity = 2 - rank;
 
-      document.getElementById('la-u1-res').innerHTML = `
-        <p>Det(T): <strong>${det.toFixed(2)}</strong></p>
-        <p>dim(V) = 2</p>
-        <p>Rank(T): <strong>${rank}</strong> | Nullity: <strong>${nullity}</strong></p>
-        <p style="color: ${rank === 2 ? '#4ade80' : '#fb7185'}">
-          ${rank === 2 ? 'Invertible: ker(T) = {0}' : 'Singular: ker(T) is 1-D Subspace'}
-        </p>
-      `;
+      if (resEl) {
+        resEl.innerHTML = `
+          <p>Det(T): <strong>${det.toFixed(2)}</strong></p>
+          <p>dim(V) = 2</p>
+          <p>Rank(T): <strong>${rank}</strong> | Nullity: <strong>${nullity}</strong></p>
+          <p style="color: ${rank === 2 ? '#4ade80' : '#fb7185'}">
+            ${rank === 2 ? 'Invertible: ker(T) = {0}' : 'Singular: ker(T) is 1-D Subspace'}
+          </p>
+        `;
+      }
 
       if (nullity === 1) {
         ctx.strokeStyle = '#fb7185';
@@ -524,12 +534,13 @@
         ctx.fillText("Kernel Subspace ker(T)", cx + 15, cy - 20);
       }
     } else if (mode === 'dual') {
-      const a = parseFloat(document.getElementById('la-f-a').value) || 1;
-      const b = parseFloat(document.getElementById('la-f-b').value) || 2;
+      const elA = document.getElementById('la-f-a');
+      const elB = document.getElementById('la-f-b');
+      const a = elA ? parseFloat(elA.value) || 1 : 1;
+      const b = elB ? parseFloat(elB.value) || 2 : 2;
 
-      // Draw level curves f(v) = c for c = -2, -1, 0, 1, 2
       for (let cVal = -2; cVal <= 2; cVal++) {
-        ctx.strokeStyle = (cVal === 0) ? '#38bdf8' : 'rgba(56, 189, 248, 0.35)';
+        ctx.strokeStyle = (cVal === 0) ? '#38bdf8' : 'rgba(56, 189, 248, 0.45)';
         ctx.lineWidth = (cVal === 0) ? 2.5 : 1;
         ctx.beginPath();
         if (b !== 0) {
@@ -537,7 +548,7 @@
           let x2 = 180, y2 = (cVal * 30 - a * x2) / b;
           ctx.moveTo(cx + x1, cy - y1);
           ctx.lineTo(cx + x2, cy - y2);
-        } else {
+        } else if (a !== 0) {
           let xLine = (cVal * 30) / a;
           ctx.moveTo(cx + xLine, 0);
           ctx.lineTo(cx + xLine, canvas.height);
@@ -545,17 +556,21 @@
         ctx.stroke();
       }
 
-      document.getElementById('la-u1-res').innerHTML = `
-        <p>Linear Functional: <strong>f(x,y) = ${a}x + ${b}y</strong></p>
-        <p>Center solid line: <strong>f(v) = 0</strong> (Null Space of f)</p>
-        <p>Parallel lines: <strong>f(v) = c</strong> (Dual Affine Fibers)</p>
-        <p>Dual Basis: <strong>f_i(e_j) = &delta;<sub>ij</sub></strong></p>
-      `;
+      if (resEl) {
+        resEl.innerHTML = `
+          <p>Linear Functional: <strong>f(x,y) = ${a}x + ${b}y</strong></p>
+          <p>Solid Line: <strong>f(v) = 0</strong> (Kernel of f)</p>
+          <p>Parallel Lines: <strong>f(v) = c</strong> (Level Fibers)</p>
+          <p>Dual Basis: <strong>f_i(e_j) = &delta;<sub>ij</sub></strong></p>
+        `;
+      }
     } else if (mode === 'annihilator') {
-      const a = parseFloat(document.getElementById('la-f-a').value) || 1;
-      const b = parseFloat(document.getElementById('la-f-b').value) || 2;
+      const elA = document.getElementById('la-f-a');
+      const elB = document.getElementById('la-f-b');
+      const a = elA ? parseFloat(elA.value) || 1 : 1;
+      const b = elB ? parseFloat(elB.value) || 2 : 2;
 
-      // Subspace W: Line along direction (b, -a) so that a*x + b*y = 0
+      // Subspace W: along (b, -a)
       ctx.strokeStyle = '#4ade80';
       ctx.lineWidth = 3;
       ctx.beginPath();
@@ -565,7 +580,7 @@
       ctx.fillStyle = '#4ade80';
       ctx.fillText("Subspace W", cx + b * 35 + 8, cy + a * 35);
 
-      // Annihilator A(W) normal direction (a, b)
+      // Annihilator A(W): normal vector direction (a, b)
       ctx.strokeStyle = '#fb7185';
       ctx.lineWidth = 2.5;
       ctx.beginPath();
@@ -575,12 +590,14 @@
       ctx.fillStyle = '#fb7185';
       ctx.fillText("Functional Basis for A(W)", cx + a * 50 + 6, cy - b * 50);
 
-      document.getElementById('la-u1-res').innerHTML = `
-        <p>Subspace W dimension: <strong>dim(W) = 1</strong></p>
-        <p>Total Space dimension: <strong>dim(V) = 2</strong></p>
-        <p>Annihilator: <strong>dim(A(W)) = 2 - 1 = 1</strong></p>
-        <p style="color:#fb7185;">Every f &isin; A(W) satisfies f(w) = 0 for all w &isin; W</p>
-      `;
+      if (resEl) {
+        resEl.innerHTML = `
+          <p>Subspace: <strong>dim(W) = 1</strong></p>
+          <p>Space: <strong>dim(V) = 2</strong></p>
+          <p>Annihilator: <strong>dim(A(W)) = 2 - 1 = 1</strong></p>
+          <p style="color:#fb7185;">dim(W) + dim(A(W)) = dim(V)</p>
+        `;
+      }
     }
   }
 
