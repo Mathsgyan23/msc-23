@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linear Algebra Studio | M.Sc. Mathematics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #111827;
+      --border: #1f2937;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --green: #4ade80;
+      --purple: #c084fc;
+      --rose: #fb7185;
+      --gold: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 24px 16px; line-height: 1.6; }
+
+    .header-bar {
+      max-width: 1100px;
+      margin: 0 auto 24px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .back-btn {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .back-btn:hover { text-decoration: underline; }
+
+    .page-title {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 30px auto;
+    }
+    .page-title h1 { color: var(--accent); font-size: 2.2rem; margin-bottom: 8px; }
+    .page-title p { color: var(--muted); font-size: 1rem; }
+
+    /* Nav Tabs */
+    .unit-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      max-width: 1100px;
+      margin: 0 auto 30px auto;
+      flex-wrap: wrap;
+    }
+    .unit-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+    .unit-btn.active, .unit-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: #172554;
+    }
+
+    /* Container Box */
+    .module-card {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+    .module-card.active { display: block; }
+
+    .module-card h2 { color: var(--accent); font-size: 1.4rem; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+    .sub-section { margin-bottom: 30px; }
+    .sub-section h3 { color: var(--gold); font-size: 1.15rem; margin-bottom: 12px; }
+
+    .controls-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #090d16;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .controls-row input, .controls-row select {
+      background: #111827;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 6px;
+      width: 70px;
+    }
+    .btn-action {
+      background: var(--accent);
+      color: #0b0f19;
+      border: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-action:hover { opacity: 0.9; }
+
+    .flex-layout {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    canvas {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .info-pane {
+      flex: 1;
+      min-width: 280px;
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.9rem;
+    }
+    .info-pane h4 { color: var(--accent); margin-bottom: 10px; }
+    .matrix-view {
+      display: inline-block;
+      border-left: 2px solid var(--text);
+      border-right: 2px solid var(--text);
+      padding: 4px 10px;
+      font-family: monospace;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-bar">
+    <a href="index.html" class="back-btn">&larr; Back to Portal</a>
+    <span style="color: var(--muted); font-size: 0.9rem;">Shivaji University M.Sc. Part-I (Sem-I)</span>
+  </div>
+
+  <div class="page-title">
+    <h1>Linear Algebra Visual Studio</h1>
+    <p>Comprehensive interactive simulations of all 4 Units (Syllabus-aligned)</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="unit-nav">
+    <button class="unit-btn active" onclick="switchUnit(0)">Unit 1: Kernel, Duals & Annihilators</button>
+    <button class="unit-btn" onclick="switchUnit(1)">Unit 2: IPS, Projections & Gram-Schmidt</button>
+    <button class="unit-btn" onclick="switchUnit(2)">Unit 3: Triangular, Nilpotent & Jordan</button>
+    <button class="unit-btn" onclick="switchUnit(3)">Unit 4: Operators & Bilinear Forms</button>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- UNIT 1                                                   -->
+  <!-- ======================================================== -->
+  <div class="module-card active" id="unit-0">
+    <h2>Unit I: Vector Spaces, Maps, Dual Spaces & Annihilator</h2>
+
+    <!-- Part A: Kernel & Map -->
+    <div class="sub-section">
+      <h3>1. Linear Transformation, Kernel & Rank-Nullity</h3>
+      <div class="controls-row">
+        <span>Matrix [T]: </span>
+        [<input type="number" id="u1-a" value="1" step="0.5" onchange="runUnit1A()">
+         <input type="number" id="u1-b" value="2" step="0.5" onchange="runUnit1A()">]
+        [<input type="number" id="u1-c" value="2" step="0.5" onchange="runUnit1A()">
+         <input type="number" id="u1-d" value="4" step="0.5" onchange="runUnit1A()">]
+      </div>
+      <div class="flex-layout">
+        <canvas id="cvsU1A" width="380" height="300"></canvas>
+        <div class="info-pane">
+          <h4>Theorem & Dimensions</h4>
+          <div id="u1a-out"></div>
+          <hr style="border-color: var(--border); margin: 10px 0;">
+          <p><strong>Kernel ker(T):</strong> {v &in; V | T(v) = 0}</p>
+          <p><strong>Rank-Nullity:</strong> dim(V) = rank(T) + nullity(T)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Part B: Dual Functional & Annihilator -->
+    <div class="sub-section">
+      <h3>2. Annihilator A(W) & Functional Level Curves</h3>
+      <div class="controls-row">
+        <label>Subspace Line W Slope: </label>
+        <input type="number" id="u1-slope" value="1" step="0.5" onchange="runUnit1B()">
+        <span style="color: var(--muted); font-size: 0.85rem;">(Level lines f(v)=c vanishing on W)</span>
+      </div>
+      <div class="flex-layout">
+        <canvas id="cvsU1B" width="380" height="300"></canvas>
+        <div class="info-pane">
+          <h4>Dual Properties</h4>
+          <p><strong>dim W + dim A(W) = dim V</strong></p>
+          <p>Green lines represent linear functionals vanishing uniformly on subspace W.</p>
+          <p>A(A(W)) = W and A(W1 + W2) = A(W1) &cap; A(W2)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- UNIT 2                                                   -->
+  <!-- ======================================================== -->
+  <div class="module-card" id="unit-1">
+    <h2>Unit II: Inner Product Spaces, Projections & Gram-Schmidt</h2>
+
+    <!-- Part A: Gram-Schmidt -->
+    <div class="sub-section">
+      <h3>1. Gram-Schmidt Orthonormalization Process</h3>
+      <div class="controls-row">
+        <button class="btn-action" onclick="runGramSchmidt()">Run Orthonormalization</button>
+      </div>
+      <div class="flex-layout">
+        <canvas id="cvsU2A" width="380" height="300"></canvas>
+        <div class="info-pane">
+          <h4>Basis Conversion</h4>
+          <div id="u2a-out"></div>
+          <p style="margin-top: 8px;"><strong>Cauchy-Schwarz:</strong> |&langle;u,v&rangle;| &le; ||u|| ||v||</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Part B: W and W_perp Projection -->
+    <div class="sub-section">
+      <h3>2. Orthogonal Direct Sum Decomposition: V = W &oplus; W<sup>&perp;</sup></h3>
+      <div class="controls-row">
+        <label>Vector X: </label>
+        <input type="number" id="u2-vx" value="3" step="0.5" onchange="runUnit2B()">
+        <label>Vector Y: </label>
+        <input type="number" id="u2-vy" value="2" step="0.5" onchange="runUnit2B()">
+      </div>
+      <div class="flex-layout">
+        <canvas id="cvsU2B" width="380" height="300"></canvas>
+        <div class="info-pane">
+          <h4>Decomposition</h4>
+          <div id="u2b-out"></div>
+          <p>Every vector splits uniquely as: v = w + w<sup>&perp;</sup> where w &in; W, w<sup>&perp;</sup> &in; W<sup>&perp;</sup>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- UNIT 3                                                   -->
+  <!-- ======================================================== -->
+  <div class="module-card" id="unit-2">
+    <h2>Unit III: Canonical Forms, Nilpotent Shifts & Jordan Blocks</h2>
+
+    <div class="sub-section">
+      <h3>1. Basic Jordan Block J<sub>m</sub>(&lambda;) & Minimal Polynomial</h3>
+      <div class="controls-row">
+        <label>Eigenvalue (&lambda;): </label>
+        <input type="number" id="u3-lambda" value="2" onchange="buildJordan()">
+        <label>Block Size (m): </label>
+        <select id="u3-size" onchange="buildJordan()" style="width: auto;">
+          <option value="2">2 &times; 2</option>
+          <option value="3" selected>3 &times; 3</option>
+          <option value="4">4 &times; 4</option>
+        </select>
+      </div>
+      <div class="flex-layout">
+        <div class="info-pane" style="width: 100%;">
+          <h4>Block Matrix Representation: J<sub>m</sub>(&lambda;) = &lambda;I + M<sub>m</sub></h4>
+          <div id="u3-matrix" class="matrix-view"></div>
+          <div id="u3-info" style="margin-top: 14px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3>2. Nilpotent Shift Operators & Invariant Chains</h3>
+      <div class="controls-row">
+        <button class="btn-action" onclick="stepNilpotent()">Shift Vector Step-by-Step</button>
+        <span id="nil-state" style="color: var(--gold); font-size: 0.9rem;">Current State: v</span>
+      </div>
+      <div class="flex-layout">
+        <canvas id="cvsU3B" width="380" height="260"></canvas>
+        <div class="info-pane">
+          <h4>Nilpotent Dynamics</h4>
+          <p>T<sup>k</sup> = 0 for index of nilpotence k.</p>
+          <p>Cyclic chain: v &rarr; T(v) &rarr; T<sup>2</sup>(v) &rarr; 0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- UNIT 4                                                   -->
+  <!-- ======================================================== -->
+  <div class="module-card" id="unit-3">
+    <h2>Unit IV: Operator Theory & Bilinear Forms</h2>
+
+    <!-- Part A: Operators -->
+    <div class="sub-section">
+      <h3>1. Spectrum in Complex Plane (Spectral Theorem)</h3>
+      <div class="controls-row">
+        <label>Operator Class: </label>
+        <select id="u4-op" onchange="runUnit4A()" style="width: auto;">
+          <option value="hermitian">Hermitian (Real Line)</option>
+          <option value="unitary">Unitary (Unit Circle |&lambda;|=1)</option>
+          <option value="skew">Skew-Hermitian (Pure Imaginary)</option>
+          <option value="normal">Normal (Complex Plane)</option>
+        </select>
+      </div>
+      <div class="flex-layout">
+        <canvas id="cvsU4A" width="380" height="300"></canvas>
+        <div class="info-pane">
+          <h4>Spectral Properties</h4>
+          <div id="u4a-out"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Part B: Bilinear Forms -->
+    <div class="sub-section">
+      <h3>2. Symmetric Bilinear Forms & Sylvester's Law of Inertia</h3>
+      <div class="controls-row">
+        <label>Form Type: </label>
+        <select id="u4-form" onchange="runUnit4B()" style="width: auto;">
+          <option value="ellipse">Positive Definite (Ellipse: x&sup2; + y&sup2; = 1)</option>
+          <option value="hyperbola">Indefinite (Hyperbola: x&sup2; - y&sup2; = 1)</option>
+          <option value="degenerate">Degenerate (Rank < n)</option>
+        </select>
+      </div>
+      <div class="flex-layout">
+        <canvas id="cvsU4B" width="380" height="300"></canvas>
+        <div class="info-pane">
+          <h4>Sylvester's Law of Inertia</h4>
+          <div id="u4b-out"></div>
+          <p>Signature = dim(V<sup>+</sup>) - dim(V<sup>-</sup>)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- SCRIPT LOGIC                                             -->
+  <!-- ======================================================== -->
+  <script>
+    function switchUnit(idx) {
+      document.querySelectorAll('.unit-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+      document.querySelectorAll('.module-card').forEach((m, i) => m.classList.toggle('active', i === idx));
+      if (idx === 0) { runUnit1A(); runUnit1B(); }
+      if (idx === 1) { runUnit2A(); runUnit2B(); }
+      if (idx === 2) { buildJordan(); resetNilpotent(); }
+      if (idx === 3) { runUnit4A(); runUnit4B(); }
+    }
+
+    // --- UNIT 1 LOGIC ---
+    function runUnit1A() {
+      const cvs = document.getElementById('cvsU1A');
+      const ctx = cvs.getContext('2d');
+      const a = parseFloat(document.getElementById('u1-a').value) || 0;
+      const b = parseFloat(document.getElementById('u1-b').value) || 0;
+      const c = parseFloat(document.getElementById('u1-c').value) || 0;
+      const d = parseFloat(document.getElementById('u1-d').value) || 0;
+
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      const cx = cvs.width / 2, cy = cvs.height / 2;
+
+      ctx.strokeStyle = '#1f2937';
+      ctx.beginPath();
+      ctx.moveTo(0, cy); ctx.lineTo(cvs.width, cy);
+      ctx.moveTo(cx, 0); ctx.lineTo(cx, cvs.height);
+      ctx.stroke();
+
+      const det = a*d - b*c;
+      const rank = (a===0 && b===0 && c===0 && d===0) ? 0 : (det !== 0 ? 2 : 1);
+      const nullity = 2 - rank;
+
+      document.getElementById('u1a-out').innerHTML = `
+        <p>Det(T): <strong>${det.toFixed(2)}</strong></p>
+        <p>Rank(T): <strong>${rank}</strong> | Nullity: <strong>${nullity}</strong></p>
+        <p style="color: ${rank === 2 ? '#4ade80' : '#fb7185'}">${rank === 2 ? 'Invertible (Null space = {0})' : 'Singular (ker T exists as line)'}</p>
+      `;
+
+      if (nullity === 1) {
+        ctx.strokeStyle = '#fb7185';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        let vx = b !== 0 ? -b : -d;
+        let vy = b !== 0 ? a : c;
+        ctx.moveTo(cx - vx * 80, cy + vy * 80);
+        ctx.lineTo(cx + vx * 80, cy - vy * 80);
+        ctx.stroke();
+        ctx.fillStyle = '#fb7185';
+        ctx.fillText("ker(T)", cx + 15, cy - 20);
+      }
+    }
+
+    function runUnit1B() {
+      const cvs = document.getElementById('cvsU1B');
+      const ctx = cvs.getContext('2d');
+      const m = parseFloat(document.getElementById('u1-slope').value) || 1;
+
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      const cx = cvs.width / 2, cy = cvs.height / 2;
+
+      // Subspace Line W
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(cx - 150, cy + 150 * m);
+      ctx.lineTo(cx + 150, cy - 150 * m);
+      ctx.stroke();
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText("Subspace W", cx + 50, cy - 50 * m - 10);
+
+      // Functionals vanishing on W (Level curves of A(W))
+      ctx.strokeStyle = 'rgba(74, 222, 128, 0.4)';
+      ctx.lineWidth = 1.5;
+      for (let offset = -80; offset <= 80; offset += 30) {
+        ctx.beginPath();
+        ctx.moveTo(cx - 150, cy + 150 * m + offset);
+        ctx.lineTo(cx + 150, cy - 150 * m + offset);
+        ctx.stroke();
+      }
+    }
+
+    // --- UNIT 2 LOGIC ---
+    function runUnit2A() {
+      const cvs = document.getElementById('cvsU2A');
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      const cx = cvs.width / 2, cy = cvs.height / 2;
+
+      ctx.strokeStyle = '#1f2937';
+      ctx.beginPath();
+      ctx.moveTo(0, cy); ctx.lineTo(cvs.width, cy);
+      ctx.moveTo(cx, 0); ctx.lineTo(cx, cvs.height);
+      ctx.stroke();
+
+      drawVec(ctx, cx, cy, 100, 0, '#38bdf8', 'v1');
+      drawVec(ctx, cx, cy, 60, -60, '#c084fc', 'v2');
+
+      document.getElementById('u2a-out').innerHTML = `
+        <p>Original Vectors: v1 = (2.5, 0), v2 = (1.5, 1.5)</p>
+        <p>Inner product &ne; 0 (Not orthogonal)</p>
+      `;
+    }
+
+    function runGramSchmidt() {
+      const cvs = document.getElementById('cvsU2A');
+      const ctx = cvs.getContext('2d');
+      runUnit2A();
+      const cx = cvs.width / 2, cy = cvs.height / 2;
+
+      drawVec(ctx, cx, cy, 90, 0, '#4ade80', 'e1');
+      drawVec(ctx, cx, cy, 0, -90, '#4ade80', 'e2');
+
+      document.getElementById('u2a-out').innerHTML = `
+        <p style="color:#4ade80; font-weight:600;">Gram-Schmidt Complete:</p>
+        <p>e1 = (1, 0), e2 = (0, 1)</p>
+        <p>&langle;e1, e2&rangle; = 0 | ||e1|| = ||e2|| = 1</p>
+      `;
+    }
+
+    function runUnit2B() {
+      const cvs = document.getElementById('cvsU2B');
+      const ctx = cvs.getContext('2d');
+      const vx = parseFloat(document.getElementById('u2-vx').value) || 0;
+      const vy = parseFloat(document.getElementById('u2-vy').value) || 0;
+
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      const cx = cvs.width / 2, cy = cvs.height / 2;
+      const s = 30;
+
+      // Axis / Subspace W (horizontal axis)
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(20, cy); ctx.lineTo(cvs.width - 20, cy);
+      ctx.stroke();
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText("Subspace W", cvs.width - 80, cy - 8);
+
+      // W_perp (vertical axis)
+      ctx.strokeStyle = '#fb7185';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, 20); ctx.lineTo(cx, cvs.height - 20);
+      ctx.stroke();
+      ctx.fillStyle = '#fb7185';
+      ctx.fillText("W_perp", cx + 10, 30);
+
+      // Vector v
+      drawVec(ctx, cx, cy, vx*s, -vy*s, '#f59e0b', 'v');
+      // Projections
+      drawVec(ctx, cx, cy, vx*s, 0, '#38bdf8', 'w &in; W');
+      drawVec(ctx, cx + vx*s, cy, 0, -vy*s, '#fb7185', 'w_perp');
+
+      document.getElementById('u2b-out').innerHTML = `
+        <p><strong>v</strong> = (${vx}, ${vy})</p>
+        <p><strong>w (Proj on W)</strong> = (${vx}, 0)</p>
+        <p><strong>w_perp</strong> = (0, ${vy})</p>
+      `;
+    }
+
+    function drawVec(ctx, x, y, dx, dy, col, lbl) {
+      ctx.strokeStyle = col;
+      ctx.fillStyle = col;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + dx, y + dy);
+      ctx.stroke();
+      ctx.fillText(lbl, x + dx + 6, y + dy - 6);
+    }
+
+    // --- UNIT 3 LOGIC ---
+    function buildJordan() {
+      const l = document.getElementById('u3-lambda').value;
+      const sz = parseInt(document.getElementById('u3-size').value);
+      let html = "";
+      for (let i = 0; i < sz; i++) {
+        html += "[ ";
+        for (let j = 0; j < sz; j++) {
+          if (i === j) html += `<span style="color:#38bdf8; font-weight:bold;">${l}</span> `;
+          else if (j === i + 1) html += `<span style="color:#4ade80; font-weight:bold;">1</span> `;
+          else html += `<span style="color:#64748b;">0</span> `;
+        }
+        html += " ]<br>";
+      }
+      document.getElementById('u3-matrix').innerHTML = html;
+      document.getElementById('u3-info').innerHTML = `
+        <p><strong>Minimal Polynomial:</strong> p(x) = (x - ${l})<sup>${sz}</sup></p>
