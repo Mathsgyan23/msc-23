@@ -1,0 +1,1920 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real Analysis: Interactive Visual Masterclass & Syllabus Explorer</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <style>
+    /* Custom styling for canvas and math */
+    .math-font { font-family: 'KaTeX_Math', 'Times New Roman', serif; }
+    canvas { touch-action: none; }
+    .tab-active { border-bottom: 3px solid #4f46e5; color: #4f46e5; font-weight: 700; }
+    .unit-pill-active { background-color: #4f46e5; color: white; }
+    /* custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Top Header -->
+  <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-indigo-500 to-emerald-400 flex items-center justify-center font-bold text-xl text-white shadow">
+          &int;
+        </div>
+        <div>
+          <h1 class="text-lg md:text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            Real Analysis & Measure Theory
+            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-indigo-500/30 text-indigo-300 border border-indigo-400/40">MT 301</span>
+          </h1>
+          <p class="text-xs text-slate-400">Shivaji University, Kolhapur &bull; M.Sc. Part-II (Sem-III) Course Companion</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Navigation -->
+      <div class="flex items-center space-x-2 text-xs overflow-x-auto pb-1 md:pb-0">
+        <button id="btn-syllabus-view" class="px-3 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition shadow-sm flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          Course Units (I&ndash;VIII)
+        </button>
+        <button id="btn-visual-lab" class="px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+          Interactive Visual Lab
+        </button>
+        <button id="btn-quiz-view" class="px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium transition flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          Concept Quiz
+        </button>
+      </div>
+    </div>
+
+    <!-- Unit Selector Pill Bar -->
+    <div class="bg-slate-800 border-t border-slate-700 px-4 py-2">
+      <div class="max-w-7xl mx-auto flex items-center space-x-1.5 overflow-x-auto text-xs py-1" id="unit-pills">
+        <button data-unit="1" class="unit-pill px-3 py-1.5 rounded-full font-medium transition unit-pill-active whitespace-nowrap">Unit I: Sets & Topology</button>
+        <button data-unit="2" class="unit-pill px-3 py-1.5 rounded-full font-medium transition bg-slate-700 text-slate-300 hover:bg-slate-600 whitespace-nowrap">Unit II: Lebesgue Measure</button>
+        <button data-unit="3" class="unit-pill px-3 py-1.5 rounded-full font-medium transition bg-slate-700 text-slate-300 hover:bg-slate-600 whitespace-nowrap">Unit III: Measurable Functions</button>
+        <button data-unit="4" class="unit-pill px-3 py-1.5 rounded-full font-medium transition bg-slate-700 text-slate-300 hover:bg-slate-600 whitespace-nowrap">Unit IV: Lebesgue Integral</button>
+        <button data-unit="5" class="unit-pill px-3 py-1.5 rounded-full font-medium transition bg-slate-700 text-slate-300 hover:bg-slate-600 whitespace-nowrap">Unit V: General Integral</button>
+        <button data-unit="6" class="unit-pill px-3 py-1.5 rounded-full font-medium transition bg-slate-700 text-slate-300 hover:bg-slate-600 whitespace-nowrap">Unit VI: Monotone Functions & BV</button>
+        <button data-unit="7" class="unit-pill px-3 py-1.5 rounded-full font-medium transition bg-slate-700 text-slate-300 hover:bg-slate-600 whitespace-nowrap">Unit VII: Absolute Continuity</button>
+        <button data-unit="8" class="unit-pill px-3 py-1.5 rounded-full font-medium transition bg-slate-700 text-slate-300 hover:bg-slate-600 whitespace-nowrap">Unit VIII: L^p Spaces</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Content / Teaching View (7 cols on lg) -->
+    <div id="teaching-pane" class="lg:col-span-7 space-y-6">
+      
+      <!-- Unit Content Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 transition">
+        
+        <!-- Unit Header Info -->
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-5">
+          <div>
+            <span id="unit-badge" class="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+              Unit I &bull; Foundations
+            </span>
+            <h2 id="unit-title" class="text-xl md:text-2xl font-bold text-slate-900 mt-2">
+              Open Sets, Closed Sets and Borel Sets
+            </h2>
+          </div>
+          <button id="btn-jump-sim" class="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1 transition">
+            <span>Visual Simulation</span> &rarr;
+          </button>
+        </div>
+
+        <!-- Dynamic Content Body -->
+        <div id="unit-content-body" class="prose prose-slate max-w-none text-sm md:text-base leading-relaxed space-y-5">
+          <!-- Populated by JavaScript -->
+        </div>
+
+      </div>
+
+      <!-- Quick Concept Summary & Formula Cheat Sheet -->
+      <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-xl p-5 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-sm text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+            <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+            Key Exam Results & Landmark Formulas
+          </h3>
+          <span class="text-xs text-slate-400">Shivaji Univ Syllabus MT 301</span>
+        </div>
+        <div id="unit-formula-box" class="bg-slate-800/80 rounded-lg p-3.5 border border-slate-700/60 font-mono text-xs md:text-sm text-emerald-300 overflow-x-auto space-y-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Content / Interactive Visual Lab (5 cols on lg) -->
+    <div id="visual-pane" class="lg:col-span-5 space-y-6">
+      
+      <!-- Interactive Visualizer Sandbox Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 sticky top-20">
+        
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+            <h3 id="sim-title" class="font-bold text-slate-900 text-sm md:text-base">Interactive Visual Simulation</h3>
+          </div>
+          <span id="sim-badge" class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono">Live Demo</span>
+        </div>
+
+        <p id="sim-desc" class="text-xs text-slate-600 mb-4 leading-relaxed">
+          Use the interactive controls below to manipulate real analysis concepts in real-time.
+        </p>
+
+        <!-- Canvas Container -->
+        <div class="relative bg-slate-900 rounded-lg border border-slate-800 overflow-hidden shadow-inner flex flex-col items-center justify-center min-h-[300px]">
+          <canvas id="sim-canvas" width="460" height="300" class="w-full h-auto block"></canvas>
+          <div id="canvas-overlay-stats" class="absolute bottom-2 left-2 bg-slate-950/80 backdrop-blur text-[11px] text-slate-300 px-2 py-1 rounded border border-slate-800 font-mono pointer-events-none">
+            <!-- stats live update -->
+          </div>
+        </div>
+
+        <!-- Controls Container -->
+        <div id="sim-controls" class="mt-4 pt-3 border-t border-slate-100 space-y-3">
+          <!-- Dynamic Controls injected here -->
+        </div>
+
+        <!-- Analytical Explanatory Note -->
+        <div id="sim-explanation" class="mt-4 p-3 bg-amber-50 rounded-lg border border-amber-200/80 text-xs text-amber-900 leading-relaxed space-y-1">
+          <!-- Dynamic explanation injected here -->
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Interactive Quiz Modal / Drawer (Full Page Toggle) -->
+  <div id="quiz-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 flex flex-col">
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between rounded-t-2xl">
+        <div class="flex items-center space-x-2">
+          <span class="text-amber-400 font-bold">&check;</span>
+          <h3 class="font-bold text-base md:text-lg">Real Analysis Self-Assessment & Quiz</h3>
+        </div>
+        <button id="btn-close-quiz" class="text-slate-400 hover:text-white p-1 text-lg font-bold">&times;</button>
+      </div>
+      <div class="p-6 space-y-5 flex-1">
+        <p class="text-xs text-slate-500">Test your mastery of measure theory definitions, counterexamples, and core theorems across all 8 syllabus units.</p>
+        <div id="quiz-container" class="space-y-4">
+          <!-- Quiz questions injected here -->
+        </div>
+      </div>
+      <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 flex justify-between items-center rounded-b-2xl">
+        <span id="quiz-score" class="text-xs font-semibold text-slate-600">Answer questions to evaluate score</span>
+        <button id="btn-reset-quiz" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm">Reset Quiz</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-4 px-4 text-center text-xs text-slate-500">
+    <p>Real Analysis Course Visual Companion &bull; Shivaji University, Kolhapur M.Sc. II (MT 301) &bull; Built for Interactive Visual Mastery</p>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    // --- Data Model for all 8 Units ---
+    const courseData = {
+      1: {
+        unit: 1,
+        title: "Open Sets, Closed Sets and Borel Sets",
+        badge: "Unit I &bull; Point-Set Topology & Borel Hierarchy",
+        simTitle: "Heine-Borel Finite Subcover & Shrinking Intervals",
+        simDesc: "Visualize an open cover of the closed bounded interval [a, b] and watch how a finite subcover is selected, or shrink open intervals (-1/n, 1/n) down to the singleton {0}.",
+        formulaBox: `1. Open Set: \(\forall x \in O, \exists r > 0 \text{ s.t. } (x-r, x+r) \subseteq O\)
+2. Closed Set: \(E = \overline{E}\) (contains all closure points) \(\iff E^c\) is open
+3. Arbitrary union of open sets is open; Finite intersection is open.
+4. Heine-Borel: Every open cover of closed & bounded \([a, b]\) has a finite subcover.
+5. Borel \(\sigma\)-algebra \(\mathcal{B}\): Smallest \(\sigma\)-algebra generated by all open sets.
+6. \(G_\delta\) sets: Countable intersection of open sets \(\bigcap O_n\)
+7. \(F_\sigma\) sets: Countable union of closed sets \(\bigcup F_n\)`,
+        content: `
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3">1.1 Open Sets and Closed Sets in \(\mathbb{R}\)</h3>
+            <p>
+              A set \(O \subseteq \mathbb{R}\) is called <strong>open</strong> if every point \(x \in O\) is surrounded by some open interval completely contained inside \(O\):
+              $$\exists r > 0 \quad \text{such that} \quad (x - r, x + r) \subseteq O$$
+              <strong>Why intervals matter:</strong> Any bounded open interval \((a, b)\) is an open set because for any \(x \in (a, b)\), choosing \(r = \min\{x - a, b - x\} > 0\) ensures \((x - r, x + r) \subseteq (a, b)\).
+            </p>
+            <div class="bg-indigo-50/70 p-3.5 rounded-lg border border-indigo-100 text-xs md:text-sm">
+              <strong class="text-indigo-900">Key Topology Proposition:</strong>
+              <ul class="list-disc pl-5 mt-1 space-y-1 text-slate-700">
+                <li>The <strong>union of any collection</strong> of open sets is open: \(\bigcup_{k \in I} O_k\) is open.</li>
+                <li>The <strong>intersection of any finite collection</strong> of open sets is open: \(\bigcap_{k=1}^n O_k\) is open.</li>
+                <li><strong>Counterexample for infinite intersections:</strong> Consider \(O_n = \left(-\frac{1}{n}, \frac{1}{n}\right)\). Each \(O_n\) is open, but \(\bigcap_{n=1}^\infty O_n = \{0\}\), which is a closed singleton, <em>not</em> open!</li>
+              </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">1.2 Structure of Open Sets & Heine-Borel Theorem</h3>
+            <p>
+              <strong>Decomposition Theorem:</strong> Every non-empty open subset of \(\mathbb{R}\) can be uniquely expressed as the <em>countable disjoint union</em> of open intervals:
+              $$O = \bigcup_{k=1}^\infty (a_k, b_k) \quad \text{with } (a_j, b_j) \cap (a_k, b_k) = \emptyset \ (j \ne k)$$
+              This fundamental decomposition is what allows us to define the "measure" (length) of any open set as simply the sum of lengths of its constituent open intervals!
+            </p>
+            <div class="bg-slate-100 p-3.5 rounded-lg border border-slate-200 text-xs md:text-sm">
+              <strong class="text-slate-900 font-semibold">The Heine-Borel Theorem:</strong>
+              <p class="mt-1">
+                If \(F\) is a closed and bounded set of real numbers (compact set), then <em>every open cover of \(F\) contains a finite subcover</em>.
+                That is, if \(F \subseteq \bigcup_{i \in I} E_i\) where each \(E_i\) is open, there exists a finite subset \(\{i_1, i_2, \dots, i_n\}\) such that:
+                $$F \subseteq E_{i_1} \cup E_{i_2} \cup \dots \cup E_{i_n}$$
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">1.3 \(\sigma\)-Algebras and Borel Sets</h3>
+            <p>
+              A family \(\mathcal{A}\) of subsets of \(X\) is called a <strong>\(\sigma\)-algebra</strong> (Borel field) if:
+            </p>
+            <ol class="list-decimal pl-5 space-y-1 text-slate-700">
+              <li>\(\emptyset, X \in \mathcal{A}\)</li>
+              <li>Complement closed: \(A \in \mathcal{A} \implies X \setminus A \in \mathcal{A}\)</li>
+              <li>Countable union closed: \(A_1, A_2, \dots \in \mathcal{A} \implies \bigcup_{k=1}^\infty A_k \in \mathcal{A}\)</li>
+            </ol>
+            <p>
+              <strong>Borel Sets \(\mathcal{B}\):</strong> The smallest \(\sigma\)-algebra containing all open sets in \(\mathbb{R}\).
+              Every open set, closed set, countable set (like \(\mathbb{Q}\)), and their countable operations belong to \(\mathcal{B}\).
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+              <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs">
+                <strong class="text-amber-900 font-bold">\(G_\delta\) Sets:</strong>
+                Countable intersection of open sets \(G = \bigcap_{n=1}^\infty O_n\).
+                <br><em>Examples:</em> Open sets, closed intervals \([a, b] = \bigcap_{n=1}^\infty (a - 1/n, b + 1/n)\), the irrationals \(\mathbb{R} \setminus \mathbb{Q}\).
+              </div>
+              <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-lg text-xs">
+                <strong class="text-emerald-900 font-bold">\(F_\sigma\) Sets:</strong>
+                Countable union of closed sets \(F = \bigcup_{n=1}^\infty F_n\).
+                <br><em>Examples:</em> Closed sets, open intervals \((a, b) = \bigcup_{n=1}^\infty [a + 1/n, b - 1/n]\), rationals \(\mathbb{Q}\) (countable union of singletons).
+              </div>
+            </div>
+          </div>
+        `
+      },
+      2: {
+        unit: 2,
+        title: "Lebesgue Measure & Measurable Sets",
+        badge: "Unit II &bull; Measure Theory & Carathéodory Split",
+        simTitle: "Cantor Ternary Set & Outer Measure Zero Explorer",
+        simDesc: "Watch the Cantor Ternary Set generated by iteratively removing middle-thirds. Track how its outer measure shrinks by (2/3)^n to ZERO while remaining uncountably infinite!",
+        formulaBox: `1. Lebesgue Outer Measure:
+   \(m^*(A) = \inf \left\{ \sum_{k=1}^\infty \ell(I_k) : A \subseteq \bigcup_{k=1}^\infty I_k \right\}\)
+2. Outer measure of an interval is its length: \(m^*(I) = \ell(I) = b - a\)
+3. Countable Subadditivity: \(m^*\left(\bigcup_{k=1}^\infty E_k\right) \le \sum_{k=1}^\infty m^*(E_k)\)
+4. Cantor Set: \(m^*(C) \le (2/3)^n \to 0\) as \(n \to \infty\), yet \(|C| = 2^{\aleph_0}\) (uncountable!)
+5. Carathéodory Condition: \(E\) is measurable iff \(\forall A \subseteq \mathbb{R}\):
+   \(m^*(A) = m^*(A \cap E) + m^*(A \cap E^c)\)
+6. Vitali Set: Non-measurable set constructed via Axiom of Choice and \(x \sim y \iff x - y \in \mathbb{Q}\).`,
+        content: `
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3">2.1 The Quest for Generalized Length & Outer Measure</h3>
+            <p>
+              We want an extended length function \(m\) on subsets of \(\mathbb{R}\) that satisfies:
+              <strong>(1)</strong> Defined for every subset, <strong>(2)</strong> Equal to interval length \(m([a,b]) = b-a\), 
+              <strong>(3)</strong> Countably additive on disjoint sets, and <strong>(4)</strong> Translation invariant \(m(E + y) = m(E)\).
+              <br><span class="text-rose-600 font-semibold">Vitali's Shocking Discovery (1905):</span> Such a set function <em>cannot exist</em> on the entire power set \(\mathcal{P}(\mathbb{R})\)!
+              We must either give up countable additivity or restrict the domain to a \(\sigma\)-algebra of "measurable sets".
+            </p>
+            <p>
+              Lebesgue defined the <strong>Outer Measure</strong> \(m^*(A)\) by covering \(A\) with open intervals:
+              $$m^*(A) = \inf \left\{ \sum_{k=1}^\infty \ell(I_k) : A \subseteq \bigcup_{k=1}^\infty I_k \right\}$$
+              <strong>Core Properties:</strong> \(m^*(\emptyset) = 0\), Monotonicity (\(A \subseteq B \implies m^*(A) \le m^*(B)\)), Translation Invariance (\(m^*(A+y) = m^*(A)\)), and <strong>Countable Subadditivity</strong>:
+              $$m^*\left(\bigcup_{k=1}^\infty E_k\right) \le \sum_{k=1}^\infty m^*(E_k)$$
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">2.2 The Cantor Ternary Set</h3>
+            <div class="bg-slate-100 p-3.5 rounded-lg border border-slate-200 text-xs md:text-sm">
+              <p>Start with \(C_0 = [0, 1]\). At step 1, remove middle-third \((1/3, 2/3)\). At step 2, remove middle-thirds of the remaining 2 intervals, leaving 4 intervals each of length \(1/9\). At step \(n\), there are \(2^n\) intervals each of length \(3^{-n}\):</p>
+              $$m^*(C) \le m^*(C_n) = \sum_{k=1}^{2^n} \frac{1}{3^n} = \left(\frac{2}{3}\right)^n \to{n \to \infty} 0$$
+              <em>Surprise:</em> While its measure is 0, every number whose base-3 expansion contains only 0s and 2s belongs to \(C\). Hence \(C\) is <strong>uncountable</strong> (has the cardinality of the continuum)!
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">2.3 Carathéodory's Measurability Criterion</h3>
+            <p>
+              Because \(m^*\) only satisfies subadditivity, Carathéodory isolated those "well-behaved" sets \(E\) that split <em>every test set</em> \(A\) additively:
+              $$m^*(A) = m^*(A \cap E) + m^*(A \cap E^c)$$
+              (Since subadditivity always gives \(\le\), to prove measurability it suffices to check \(m^*(A) \ge m^*(A \cap E) + m^*(A \cap E^c)\)).
+            </p>
+            <div class="bg-indigo-50 p-3.5 rounded-lg border border-indigo-100 text-xs md:text-sm space-y-2">
+              <strong class="text-indigo-900">Landmark Measurability Theorems:</strong>
+              <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                <li>Every set of outer measure zero is measurable (null sets).</li>
+                <li>The collection \(\mathcal{M}\) of measurable sets is a <strong>\(\sigma\)-algebra</strong>.</li>
+                <li>All open intervals \((a, \infty)\), and hence <em>all Borel sets</em>, are Lebesgue measurable! (\(\mathcal{B} \subset \mathcal{M}\)).</li>
+                <li><strong>Outer & Inner Regularity:</strong> \(E\) is measurable \(\iff\) for every \(\epsilon > 0\), there is an open \(O \supseteq E\) with \(m^*(O \setminus E) < \epsilon\) \(\iff\) there is a closed \(F \subseteq E\) with \(m^*(E \setminus F) < \epsilon\).</li>
+              </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">2.4 Vitali's Non-Measurable Set</h3>
+            <p>
+              Define the equivalence relation on \([0, 1]\): \(x \sim y \iff x - y \in \mathbb{Q}\).
+              Using the <strong>Axiom of Choice</strong>, select exactly one representative from each equivalence class into a set \(P \subset [0, 1]\).
+              If \(P\) were measurable:
+              The rational translates \(\{P + q_k\}_{q_k \in \mathbb{Q} \cap [-1, 1]}\) are pairwise disjoint and cover \([0, 1]\), yet are contained in \([-1, 2]\).
+              Thus:
+              $$1 = m([0, 1]) \le \sum m(P + q_k) = \sum m(P) \le m([-1, 2]) = 3$$
+              If \(m(P) = 0\), the sum is 0 (contradicts \(\ge 1\)). If \(m(P) > 0\), the infinite sum is \(\infty\) (contradicts \(\le 3\)).
+              Therefore, <strong>\(P\) cannot be measurable</strong>!
+            </p>
+          </div>
+        `
+      },
+      3: {
+        unit: 3,
+        title: "Lebesgue Measurable Functions",
+        badge: "Unit III &bull; Measurable Functions & Approximations",
+        simTitle: "Simple Function Approximation & Range Slicing",
+        simDesc: "Observe how Lebesgue's simple functions approximate any curve by partitioning the vertical RANGE into strips of width 1/2^n, creating step-approximations phi_n(x) that climb to f(x).",
+        formulaBox: `1. Equivalent Definitions for Measurability of \(f\):
+   \(\{x : f(x) > c\}\) is measurable \(\iff \{x : f(x) \ge c\}\) is measurable
+   \(\iff \{x : f(x) < c\}\) is measurable \(\iff \{x : f(x) \le c\}\) is measurable.
+2. Continuous functions on measurable domain are measurable.
+3. Simple Function: \(\phi(x) = \sum_{i=1}^n a_i \chi_{A_i}(x)\) (finite range values).
+4. Simple Approximation Theorem: \(f \ge 0\) measurable \(\implies \exists \phi_n \nearrow f\) pointwise.
+5. Littlewood's Three Principles:
+   (1) Every measurable set is nearly a finite union of intervals.
+   (2) Every measurable function is nearly continuous (Lusin's Theorem).
+   (3) Pointwise convergent sequences are nearly uniformly convergent (Egoroff's Theorem).`,
+        content: `
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3">3.1 Measurable Functions</h3>
+            <p>
+              Let \(f: E \to [-\infty, \infty]\) have measurable domain \(E\).
+              The function \(f\) is called <strong>Lebesgue measurable</strong> if for every real number \(c\), the set
+              $$\{x \in E : f(x) > c\} \quad \text{is a measurable set}$$
+              <strong>Equivalence of Inverse Images:</strong>
+              Because \(\mathcal{M}\) is a \(\sigma\)-algebra, the four conditions:
+              \(\{f > c\}\), \(\{f \ge c\} = \bigcap_{n=1}^\infty \{f > c - 1/n\}\), \(\{f < c\} = \{f \ge c\}^c\), and \(\{f \le c\}\) are completely equivalent!
+            </p>
+            <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100 text-xs md:text-sm">
+              <strong class="text-indigo-900">Algebra of Measurable Functions:</strong>
+              If \(f\) and \(g\) are measurable, then \(af + bg\), \(f \cdot g\), \(f/g\) (where \(g \ne 0\)), \(|f|\), \(\max(f, g)\), and \(\min(f, g)\) are all measurable!
+              Also, \(f = g\) almost everywhere (a.e.) implies \(g\) is measurable if \(f\) is.
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">3.2 Simple Functions & The Approximation Theorem</h3>
+            <p>
+              A function \(\phi\) is <strong>simple</strong> if it takes only finitely many values \(\{a_1, a_2, \dots, a_n\}\).
+              Every simple function can be written uniquely in its <em>canonical form</em>:
+              $$\phi = \sum_{i=1}^n a_i \chi_{A_i} \quad \text{where } A_i = \{x : \phi(x) = a_i\} \text{ are disjoint measurable sets}$$
+              <strong>The Simple Approximation Theorem:</strong>
+              Let \(f\) be a non-negative measurable function on \(E\). Then there exists an <em>increasing sequence</em> of simple functions \(\{\phi_n\}\) such that:
+              $$0 \le \phi_1 \le \phi_2 \le \dots \le f \quad \text{and} \quad \lim_{n \to \infty} \phi_n(x) = f(x) \quad \forall x \in E$$
+              Furthermore, if \(f\) is bounded on \(E\), the convergence is <strong>uniform</strong>!
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">3.3 Littlewood's Three Principles</h3>
+            <p class="text-slate-700 italic">"There are three principles, roughly expressed in the following terms:"</p>
+            <div class="space-y-3 mt-2">
+              <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs md:text-sm">
+                <strong class="text-indigo-700 font-bold">First Principle:</strong> Every measurable set of finite measure is <em>nearly a finite union of open intervals</em>:
+                \(\forall \epsilon > 0, \exists U = \bigcup_{k=1}^n I_k\) such that \(m(E \setminus U) + m(U \setminus E) < \epsilon\).
+              </div>
+              <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs md:text-sm">
+                <strong class="text-emerald-700 font-bold">Second Principle (Lusin's Theorem):</strong> Every measurable function is <em>nearly continuous</em>:
+                If \(f\) is measurable on \(E\), for any \(\epsilon > 0\), there exists a closed set \(F \subseteq E\) such that \(f|_F\) is continuous and \(m(E \setminus F) < \epsilon\).
+              </div>
+              <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg text-xs md:text-sm">
+                <strong class="text-amber-700 font-bold">Third Principle (Egoroff's Theorem):</strong> Every pointwise convergent sequence of measurable functions is <em>nearly uniformly convergent</em>:
+                If \(f_n \to f\) pointwise on a set \(E\) with \(m(E) < \infty\), then for every \(\epsilon > 0\), there exists a closed set \(F \subseteq E\) with \(m(E \setminus F) < \epsilon\) such that \(f_n \to f\) <strong>uniformly</strong> on \(F\)!
+              </div>
+            </div>
+          </div>
+        `
+      },
+      4: {
+        unit: 4,
+        title: "The Lebesgue Integral (Bounded & Non-Negative)",
+        badge: "Unit IV &bull; Integration & Convergence Theorems",
+        simTitle: "Riemann vs Lebesgue Showdown & Dirichlet Function",
+        simDesc: "Compare Riemann's vertical domain slicing with Lebesgue's horizontal range slicing. Toggle between a smooth function and the Dirichlet Function to see why Riemann fails while Lebesgue succeeds effortlessly!",
+        formulaBox: `1. Integral of Simple Function: \(\int_E \phi = \sum_{i=1}^n a_i m(A_i \cap E)\)
+2. Bounded Function: Lower & Upper Lebesgue integrals equal \(\implies\) Lebesgue integrable.
+3. Bounded Convergence Theorem (BCT):
+   \(|f_n| \le M\), \(m(E) < \infty\), \(f_n \to f\) a.e. \(\implies \lim \int_E f_n = \int_E f\)
+4. Non-negative Function: \(\int_E f = \sup_{0 \le h \le f} \int_E h\) (bounded finite support)
+5. Chebyshev's Inequality: \(m\{x \in E : f(x) \ge \lambda\} \le \frac{1}{\lambda} \int_E f\)
+6. Fatou's Lemma: \(\int_E \liminf f_n \le \liminf \int_E f_n\)
+7. Monotone Convergence Theorem (MCT): \(0 \le f_n \nearrow f \implies \lim \int_E f_n = \int_E f\)`,
+        content: `
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3">4.1 Why Lebesgue Integration? The Flaws of Riemann</h3>
+            <p>
+              In classical Riemann integration, the domain \([a, b]\) is partitioned vertically into subintervals \([x_{i-1}, x_i]\).
+              This approach completely breaks down for discontinuous or highly oscillating functions:
+            </p>
+            <div class="bg-rose-50 p-3.5 rounded-lg border border-rose-200 text-xs md:text-sm text-rose-950">
+              <strong class="font-bold">The Dirichlet Function Counterexample:</strong>
+              $$f(x) = \begin{cases} 1 & x \in \mathbb{Q} \cap [0, 1] \\ 0 & x \notin \mathbb{Q} \cap [0, 1] \end{cases}$$
+              In <em>every</em> subinterval, there are both rational and irrational points.
+              Thus upper Darboux sum \(U(f, P) = \sum 1 \cdot \Delta x_i = 1\), while lower Darboux sum \(L(f, P) = \sum 0 \cdot \Delta x_i = 0\).
+              The upper and lower Riemann integrals never meet! <strong>Dirichlet function is NOT Riemann integrable!</strong>
+            </div>
+            <p>
+              <strong>Henri Lebesgue's Brilliant Insight:</strong> Instead of partitioning the <em>domain</em> \(X\), partition the <em>range</em> of values \(Y\)!
+              For Dirichlet's function, the range is simply \(\{0, 1\}\).
+              The pre-image of 1 is \(E_1 = \mathbb{Q} \cap [0, 1]\) (measure 0).
+              The pre-image of 0 is \(E_0 = [0, 1] \setminus \mathbb{Q}\) (measure 1).
+              Lebesgue's integral is simply:
+              $$\int_{[0, 1]} f = 1 \cdot m(E_1) + 0 \cdot m(E_0) = 1 \cdot 0 + 0 \cdot 1 = 0$$
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">4.2 Convergence Theorems: Fatou & Monotone Convergence</h3>
+            <p>
+              In Riemann calculus, switching limits and integrals \(\lim \int f_n = \int \lim f_n\) requires stringent <em>uniform convergence</em>.
+              In Lebesgue theory, much weaker pointwise assumptions suffice!
+            </p>
+            <div class="space-y-3">
+              <div class="bg-slate-100 p-3 rounded-lg border border-slate-200 text-xs md:text-sm">
+                <strong class="text-slate-900 font-bold">Fatou's Lemma:</strong> If \(\{f_n\}\) is a sequence of non-negative measurable functions, then:
+                $$\int_E \liminf_{n \to \infty} f_n \le \liminf_{n \to \infty} \int_E f_n$$
+                <em>Why the inequality can be strict:</em> Mass can "escape to infinity" (e.g. \(f_n = \chi_{[n, n+1]}\) where \(f_n \to 0\) so \(\int 0 = 0 < 1 = \lim \int f_n\)) or condense into an infinite spike at a single point (\(f_n = n \chi_{(0, 1/n]}\)).
+              </div>
+              <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-xs md:text-sm">
+                <strong class="text-emerald-900 font-bold">Monotone Convergence Theorem (MCT):</strong>
+                If \(0 \le f_1 \le f_2 \le \dots\) is an increasing sequence of non-negative measurable functions converging pointwise a.e. to \(f\), then:
+                $$\lim_{n \to \infty} \int_E f_n = \int_E f$$
+                (No uniform convergence needed &mdash; monotonicity prevents mass from escaping!)
+              </div>
+            </div>
+          </div>
+        `
+      },
+      5: {
+        unit: 5,
+        title: "The General Lebesgue Integral",
+        badge: "Unit V &bull; Dominated Convergence & Riemann Characterization",
+        simTitle: "Positive/Negative Split & Dominated Envelope",
+        simDesc: "Visualize the canonical decomposition of any function into positive part f^+ and negative part f^-, and explore how an integrable envelope g(x) traps sequences in Lebesgue's Dominated Convergence Theorem.",
+        formulaBox: `1. Decomposition: \(f^+ = \max(f, 0)\), \(f^- = \max(-f, 0)\)
+   \(f = f^+ - f^-\), \(|f| = f^+ + f^-\)
+2. Integrability: \(f\) is integrable over \(E\) \(\iff \int_E |f| < \infty\)
+   $$\int_E f = \int_E f^+ - \int_E f^-$$
+3. Lebesgue Dominated Convergence Theorem (LDCT):
+   If \(f_n \to f\) a.e. and \(|f_n(x)| \le g(x)\) a.e. with \(\int_E g < \infty\),
+   then: \(\lim_{n \to \infty} \int_E f_n = \int_E f\)
+4. Lebesgue's Characterization of Riemann Integrability:
+   A bounded function \(f\) on \([a, b]\) is Riemann integrable
+   \(\iff\) the set of points of discontinuity has measure zero (continuous a.e.)!`,
+        content: `
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3">5.1 The General Lebesgue Integral</h3>
+            <p>
+              For any measurable function \(f\), we break it into its positive and negative components:
+              $$f^+(x) = \max(f(x), 0) \ge 0, \qquad f^-(x) = \max(-f(x), 0) \ge 0$$
+              Notice that:
+              $$f = f^+ - f^- \qquad \text{and} \qquad |f| = f^+ + f^-$$
+              A measurable function \(f\) is defined to be <strong>Lebesgue integrable</strong> over \(E\) if both \(\int_E f^+ < \infty\) and \(\int_E f^- < \infty\) (equivalently, \(\int_E |f| < \infty\)).
+              Its integral is defined as:
+              $$\int_E f = \int_E f^+ - \int_E f^-$$
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">5.2 The Crown Jewel: Dominated Convergence Theorem (LDCT)</h3>
+            <div class="bg-gradient-to-r from-indigo-50 to-emerald-50 p-4 rounded-xl border border-indigo-200 text-xs md:text-sm">
+              <strong class="text-indigo-950 font-bold text-sm block mb-1">Lebesgue Dominated Convergence Theorem (LDCT):</strong>
+              Let \(\{f_n\}\) be a sequence of measurable functions on \(E\) such that \(f_n(x) \to f(x)\) almost everywhere.
+              Suppose there exists an integrable function \(g\) (the "dominator") such that:
+              $$|f_n(x)| \le g(x) \quad \text{a.e. on } E, \quad \forall n$$
+              Then \(f\) is integrable and:
+              $$\lim_{n \to \infty} \int_E f_n = \int_E f$$
+              <p class="mt-2 text-slate-700">
+                <strong>Why it works:</strong> The dominating envelope \(g\) prevents mass from shooting off to infinity (as in \(\chi_{[n, n+1]}\)) and prevents tall spikes from having non-zero area in the limit (as in \(n\chi_{(0, 1/n]}\)). It guarantees tightness!
+              </p>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">5.3 Characterization of Riemann Integrability</h3>
+            <p>
+              For over a century, mathematicians wondered: <em>Which exact functions can be integrated by Riemann's method?</em>
+              Lebesgue provided the definitive answer using measure theory:
+            </p>
+            <div class="bg-amber-50 p-3.5 rounded-lg border border-amber-200 text-xs md:text-sm text-amber-950 font-medium">
+              A bounded function \(f\) on \([a, b]\) is Riemann integrable if and only if \(f\) is continuous almost everywhere on \([a, b]\) (i.e., its set of discontinuities has Lebesgue measure zero)!
+            </div>
+            <p class="text-xs text-slate-600">
+              This explains why step functions, piecewise continuous functions, and even Thomae's popcorn function are Riemann integrable, while Dirichlet's indicator function is not (discontinuous everywhere, measure of discontinuities = 1).
+            </p>
+          </div>
+        `
+      },
+      6: {
+        unit: 6,
+        title: "Differentiability of Monotone Functions & BV",
+        badge: "Unit VI &bull; Vitali Covering & Bounded Variation",
+        simTitle: "Total Variation & Jordan Decomposition Lab",
+        simDesc: "Calculate total variation over partitions and watch Jordan Decomposition split a jagged function f into two smooth, monotonically increasing functions: f(x) = g(x) - h(x).",
+        formulaBox: `1. Dini Derivatives:
+   \(\bar{D} f(x) = \limsup_{t \to 0} \frac{f(x+t) - f(x)}{t}\), \(\D_* f(x) = \liminf_{t \to 0} \frac{f(x+t) - f(x)}{t}\)
+2. Lebesgue's Monotone Theorem:
+   Every monotone function on \((a, b)\) is differentiable almost everywhere!
+3. Total Variation:
+   \(V(f, P) = \sum_{i=1}^k |f(x_i) - f(x_{i-1})|\), \quad TV(f) = \sup_P V(f, P)\)
+4. Bounded Variation: \(f \in BV[a, b] \iff TV(f) < \infty\)
+5. Jordan's Decomposition Theorem:
+   \(f \in BV[a, b] \iff f = g - h\) where \(g, h\) are monotone increasing!
+   Specifically: \(f(x) = [f(x) + TV(f_{[a, x]})] - TV(f_{[a, x]})\)`,
+        content: `
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3">6.1 Vitali's Covering Lemma & Monotone Differentiability</h3>
+            <p>
+              A collection \(\mathcal{F}\) of closed bounded intervals is a <strong>Vitali cover</strong> of \(E\) if every point \(x \in E\) is contained in arbitrarily small intervals from \(\mathcal{F}\).
+              <br><strong>Vitali Covering Lemma:</strong> From any Vitali cover of a set \(E\) with \(m^*(E) < \infty\), one can extract a <em>finite disjoint collection</em> of intervals \(\{I_1, \dots, I_n\}\) covering almost all of \(E\):
+              $$m^*\left(E \setminus \bigcup_{k=1}^n I_k\right) < \epsilon$$
+            </p>
+            <div class="bg-indigo-50 p-3.5 rounded-lg border border-indigo-100 text-xs md:text-sm">
+              <strong class="text-indigo-900 font-bold">Lebesgue's Theorem (1904):</strong>
+              If \(f\) is a monotonic function on \((a, b)\), then \(f\) is <strong>differentiable almost everywhere</strong> on \((a, b)\), its derivative \(f'\) is measurable, and:
+              $$\int_a^b f'(x) dx \le f(b) - f(a)$$
+              (Notice the inequality: equality holds if and only if \(f\) has no singular/staircase jumps, i.e., is absolutely continuous!).
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">6.2 Functions of Bounded Variation (BV)</h3>
+            <p>
+              Given a partition \(P = \{a = x_0 < x_1 < \dots < x_k = b\}\), the variation of \(f\) is the total vertical distance traveled:
+              $$V(f, P) = \sum_{i=1}^k |f(x_i) - f(x_{i-1})|$$
+              The <strong>Total Variation</strong> is \(TV(f) = \sup_P V(f, P)\).
+              If \(TV(f) < \infty\), \(f\) is called a function of <strong>Bounded Variation</strong> (\(f \in BV\)).
+            </p>
+            <div class="bg-amber-50 p-3.5 rounded-lg border border-amber-200 text-xs md:text-sm text-amber-950">
+              <strong>Continuous \(\ne\) Bounded Variation!</strong>
+              Consider \(f(x) = x \cos\left(\frac{\pi}{2x}\right)\) on \([0, 1]\) (with \(f(0)=0\)).
+              \(f\) is continuous everywhere on \([0, 1]\).
+              However, sampling the partition \(x_k = \frac{1}{2k}\) yields variations:
+              $$V(f, P_n) = 1 + \frac{1}{2} + \frac{1}{3} + \dots + \frac{1}{n} \to \infty$$
+              Because the harmonic series diverges, \(f \notin BV\)! A continuous curve can oscillate so infinitely violently that its total arc length is infinite.
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">6.3 Jordan's Decomposition Theorem</h3>
+            <p>
+              <strong>Theorem:</strong> A function \(f\) is of bounded variation on \([a, b]\) if and only if it can be represented as the difference of two monotonically increasing functions:
+              $$f(x) = g(x) - h(x) \quad \text{where } g, h \text{ are increasing on } [a, b]$$
+              <strong>Canonical Formula:</strong> Let \(T(x) = TV(f|_{[a, x]})\) be the total variation function.
+              Then both \(T(x)\) and \(T(x) + f(x)\) are monotonically increasing!
+              Hence:
+              $$f(x) = \{[f(x) + T(x)]}_{g(x) \text{ (increasing)}} - \{T(x)}_{h(x) \text{ (increasing)}}$$
+              <strong>Corollary:</strong> Because every monotone function is differentiable a.e., <em>every function of bounded variation is differentiable almost everywhere</em>!
+            </p>
+          </div>
+        `
+      },
+      7: {
+        unit: 7,
+        title: "Continuous Functions & Absolute Continuity",
+        badge: "Unit VII &bull; Regularity Hierarchy & Fundamental Theorem",
+        simTitle: "The Devil's Staircase & Function Regularity Hierarchy",
+        simDesc: "Generate the Cantor-Lebesgue Singular Function (Devil's Staircase) to witness a continuous BV function whose derivative is ZERO a.e., breaking the Fundamental Theorem of Calculus!",
+        formulaBox: `1. Absolute Continuity (AC): \(\forall \epsilon > 0, \exists \delta > 0\) s.t. for any finite disjoint \((a_k, b_k)\):
+   \(\sum (b_k - a_k) < \delta \implies \sum |f(b_k) - f(a_k)| < \epsilon\)
+2. Strict Regularity Inclusions:
+   \(\text{Lipschitz} \subset \text{Absolutely Continuous} \subset \text{Bounded Variation} \subset \text{Continuous}\)
+3. Counterexamples:
+   \(f(x) = \sqrt{x}\): AC, but NOT Lipschitz.
+   Cantor function: Continuous & BV, but NOT AC.
+   \(x \cos(\pi/(2x))\): Continuous, but NOT BV.
+4. Fundamental Theorem of Calculus for Lebesgue Integrals:
+   \(f\) is AC on \([a, b] \iff f(x) = f(a) + \int_a^x f'(t) dt\)
+5. Indefinite Integral Differentiation:
+   \(\frac{d}{dx} \left[ \int_a^x g(t) dt \right] = g(x)\) almost everywhere!`,
+        content: `
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3">7.1 Absolute Continuity (AC)</h3>
+            <p>
+              A function \(f: [a, b] \to \mathbb{R}\) is <strong>absolutely continuous</strong> if for every \(\epsilon > 0\), there is a \(\delta > 0\) such that for any finite collection of disjoint open intervals \(\{(a_k, b_k)\}\):
+              $$\sum_{k=1}^n (b_k - a_k) < \delta \implies \sum_{k=1}^n |f(b_k) - f(a_k)| < \epsilon$$
+              <em>Geometric meaning:</em> Points cannot cluster their changes; if the total width of intervals is tiny, the total variation across them must be proportionally tiny.
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">7.2 The Hierarchy of Smoothness</h3>
+            <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 text-xs md:text-sm space-y-2">
+              <div class="font-bold text-indigo-950 text-sm">Strict Nested Inclusions:</div>
+              $$\mathcal{F}_{\text{Lipschitz}} \subsetneq \mathcal{F}_{\text{AC}} \subsetneq \mathcal{F}_{\text{BV}} \subsetneq \mathcal{F}_{\text{Continuous}}$$
+              <ul class="list-disc pl-5 space-y-1.5 text-slate-700">
+                <li><strong>Lipschitz \(\subset\) AC:</strong> \(|f(u) - f(v)| \le M |u - v|\). Choosing \(\delta = \epsilon / M\) proves AC immediately.</li>
+                <li><strong>AC \(\ne\) Lipschitz:</strong> \(f(x) = \sqrt{x}\) on \([0, 1]\). It is absolutely continuous, but has infinite derivative at 0, hence not Lipschitz!</li>
+                <li><strong>BV \(\ne\) AC:</strong> The Cantor Singular Function (Devil's Staircase). It is continuous and monotone (hence BV), but NOT AC!</li>
+                <li><strong>Continuous \(\ne\) BV:</strong> \(x \cos(\pi/(2x))\) is continuous, but oscillates with infinite total variation.</li>
+              </ul>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">7.3 The Devil's Staircase (Cantor-Lebesgue Function)</h3>
+            <p>
+              Constructed on the Cantor set: on the removed middle-third \((1/3, 2/3)\), define \(F(x) = 1/2\).
+              On the next two removed thirds, \(F(x) = 1/4\) and \(3/4\).
+              \(F(x)\) climbs continuously from \(F(0) = 0\) to \(F(1) = 1\).
+              Yet, because the removed intervals have total measure 1, <strong>\(F'(x) = 0\) almost everywhere</strong>!
+              $$\int_0^1 F'(t) dt = \int_0^1 0 \, dt = 0 \quad \ne \quad F(1) - F(0) = 1$$
+              The classical Fundamental Theorem of Calculus fails spectacularly for \(F\)!
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">7.4 The Lebesgue Fundamental Theorem of Calculus</h3>
+            <p>
+              Absolute continuity is the <em>exact</em> condition needed to restore the Fundamental Theorem:
+            </p>
+            <div class="bg-emerald-50 p-3.5 rounded-lg border border-emerald-200 text-xs md:text-sm text-emerald-950 font-medium">
+              <strong>Theorem:</strong> A function \(f\) on \([a, b]\) satisfies:
+              $$f(x) - f(a) = \int_a^x f'(t) dt \quad \forall x \in [a, b]$$
+              if and only if \(f\) is <strong>absolutely continuous</strong> on \([a, b]\)!
+              Furthermore, for any Lebesgue integrable function \(g\), its indefinite integral \(F(x) = \int_a^x g(t) dt\) is absolutely continuous, and \(F'(x) = g(x)\) a.e.
+            </div>
+          </div>
+        `
+      },
+      8: {
+        unit: 8,
+        title: "The L^p Spaces & Completeness",
+        badge: "Unit VIII &bull; Normed Spaces & Riesz-Fischer Theorem",
+        simTitle: "L^p Unit Balls & Young's Inequality Geometric Proof",
+        simDesc: "Explore the geometry of unit balls in L^p spaces for p in (0, infinity). See why p < 1 is non-convex, and inspect the geometric area under y = x^(p-1) proving Young's inequality ab <= a^p/p + b^q/q.",
+        formulaBox: `1. \(L^p(E)\) Norm: \(\|f\|_p = \left( \int_E |f|^p \right)^{1/p}\) for \(1 \le p < \infty\)
+2. \(L^\infty(E)\) Norm: \(\|f\|_\infty = \text{ess sup}_{x \in E} |f(x)|\)
+3. Conjugate Exponents: \(\frac{1}{p} + \frac{1}{q} = 1\) (\(q = \frac{p}{p-1}\))
+4. Young's Inequality: For \(a, b > 0\), \(ab \le \frac{a^p}{p} + \frac{b^q}{q}\)
+5. Hölder's Inequality: \(\int_E |fg| \le \|f\|_p \|g\|_q\)
+6. Minkowski's Inequality: \(\|f + g\|_p \le \|f\|_p + \|g\|_p\) (Triangle Inequality)
+7. Riesz-Fischer Theorem: \(L^p(E)\) is complete \(\implies\) Banach Space!
+8. Inclusion: For \(m(E) < \infty\) and \(p_1 < p_2\), \(L^{p_2}(E) \subseteq L^{p_1}(E)\).`,
+        content: `
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3">8.1 Normed Linear Spaces of Functions</h3>
+            <p>
+              In analysis, functions themselves form vectors in an infinite-dimensional space.
+              For \(1 \le p < \infty\), the space \(L^p(E)\) consists of all measurable functions on \(E\) whose \(p\)-th power is Lebesgue integrable:
+              $$\int_E |f|^p < \infty$$
+              <em>Equivalence Classes:</em> If \(f(x) = g(x)\) almost everywhere, \(\|f - g\|_p = 0\). To make \(\|f\|_p\) a genuine norm satisfying \(\|f\| = 0 \implies f = 0\), the elements of \(L^p\) are technically <em>equivalence classes</em> of functions under the relation \(f \sim g \iff f = g \text{ a.e.}\)
+            </p>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">8.2 The Classical Inequalities</h3>
+            <div class="space-y-3">
+              <div class="bg-indigo-50 p-3.5 rounded-lg border border-indigo-100 text-xs md:text-sm">
+                <strong class="text-indigo-900 font-bold">1. Young's Inequality:</strong>
+                If \(1 < p < \infty\) and \(1/p + 1/q = 1\), then for all \(a, b > 0\):
+                $$ab \le \frac{a^p}{p} + \frac{b^q}{q}$$
+                Equality holds if and only if \(a^p = b^q\).
+                <br><em>Geometric proof:</em> Split the rectangle \([0, a] \times [0, b]\) along the curve \(y = x^{p-1}\). The area under the curve is \(a^p/p\) and the area between the curve and the \(y\)-axis is \(b^q/q\)!
+              </div>
+
+              <div class="bg-emerald-50 p-3.5 rounded-lg border border-emerald-100 text-xs md:text-sm">
+                <strong class="text-emerald-900 font-bold">2. Hölder's Inequality:</strong>
+                If \(f \in L^p(E)\) and \(g \in L^q(E)\), then \(fg \in L^1(E)\) and:
+                $$\int_E |fg| \le \|f\|_p \|g\|_q$$
+                When \(p = q = 2\), this gives the famous <strong>Cauchy-Schwarz Inequality</strong>: \(\int |fg| \le \sqrt{\int f^2} \sqrt{\int g^2}\).
+              </div>
+
+              <div class="bg-amber-50 p-3.5 rounded-lg border border-amber-100 text-xs md:text-sm">
+                <strong class="text-amber-900 font-bold">3. Minkowski's Inequality:</strong>
+                For \(1 \le p \le \infty\) and \(f, g \in L^p(E)\):
+                $$\|f + g\|_p \le \|f\|_p + \|g\|_p$$
+                This establishes that \(\|\cdot\|_p\) satisfies the <strong>triangle inequality</strong>, making \(L^p(E)\) a true normed linear space!
+              </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-slate-900 border-l-4 border-indigo-600 pl-3 mt-6">8.3 Completeness: The Riesz-Fischer Theorem</h3>
+            <p>
+              In calculus on \(\mathbb{R}\), the completeness axiom (every Cauchy sequence converges) is vital.
+              Does a Cauchy sequence of functions in \(L^p\) converge to another function in \(L^p\)?
+            </p>
+            <div class="bg-slate-900 text-white p-4 rounded-xl shadow-sm text-xs md:text-sm space-y-2">
+              <strong class="text-emerald-400 font-bold text-sm">The Riesz-Fischer Theorem (1907):</strong>
+              <p>For any \(1 \le p \le \infty\), the normed linear space \(L^p(E)\) is <strong>complete</strong>. That is, \(L^p(E)\) is a <strong>Banach space</strong>.</p>
+              <p class="text-slate-300">
+                Moreover, if \(f_n \to f\) in \(L^p\), then there exists a subsequence \(\{f_{n_k}\}\) that converges <em>pointwise almost everywhere</em> to \(f\) on \(E\).
+              </p>
+            </div>
+            <p class="text-xs text-slate-600 mt-2">
+              <strong>Inclusion on finite measure:</strong> If \(m(E) < \infty\) and \(1 \le p_1 < p_2 \le \infty\), then \(L^{p_2}(E) \subset L^{p_1}(E)\) with \(\|f\|_{p_1} \le m(E)^{\frac{1}{p_1} - \frac{1}{p_2}} \|f\|_{p_2}\).
+              (On infinite measure spaces like \(\mathbb{R}\), no such inclusion holds!).
+            </p>
+          </div>
+        `
+      }
+    };
+
+    // --- Quiz Questions Data ---
+    const quizQuestions = [
+      {
+        unit: "Unit I",
+        q: "Why is the infinite intersection of open intervals \(\bigcap_{n=1}^\infty (-1/n, 1/n)\) not an open set?",
+        options: [
+          "Because the intersection is empty.",
+          "Because the intersection is {0}, which contains no open interval around 0.",
+          "Because intervals are always unbounded.",
+          "Because open intervals can never be intersected."
+        ],
+        answer: 1,
+        explanation: "The intersection contains only the point 0. No ball (0-r, 0+r) can fit inside {0}, so {0} is closed, not open."
+      },
+      {
+        unit: "Unit II",
+        q: "What is the Lebesgue outer measure of the Cantor ternary set?",
+        options: [
+          "It is 1, equal to the unit interval.",
+          "It is 1/2.",
+          "It is 0, because the removed lengths sum to 1.",
+          "It cannot be defined because Cantor set is uncountable."
+        ],
+        answer: 2,
+        explanation: "The total length of removed middle thirds is 1/3 + 2/9 + 4/27 + ... = 1. Hence m*(C) <= (2/3)^n -> 0."
+      },
+      {
+        unit: "Unit III",
+        q: "Which of Littlewood's principles corresponds to Lusin's Theorem?",
+        options: [
+          "Every measurable set is nearly a finite union of intervals.",
+          "Every measurable function is nearly continuous.",
+          "Every pointwise convergent sequence is nearly uniformly convergent.",
+          "Every simple function is differentiable."
+        ],
+        answer: 1,
+        explanation: "Lusin's theorem states that for any measurable function f and epsilon > 0, there is a closed set F with m(E \ F) < epsilon where f|_F is continuous."
+      },
+      {
+        unit: "Unit IV",
+        q: "Why is Dirichlet's function \(\chi_\mathbb{Q}\) on [0, 1] Lebesgue integrable but not Riemann integrable?",
+        options: [
+          "Because Riemann partitions the domain where rationals are dense, whereas Lebesgue measures the pre-image of values.",
+          "Because rational numbers are uncountable.",
+          "Because the Dirichlet function is continuous a.e.",
+          "Because Riemann integrals cannot integrate bounded functions."
+        ],
+        answer: 0,
+        explanation: "In every subinterval, inf f = 0 and sup f = 1, so Riemann lower/upper sums remain 0 and 1. Lebesgue groups points with value 1 (measure 0) and value 0 (measure 1), giving integral 0."
+      },
+      {
+        unit: "Unit V",
+        q: "In the Lebesgue Dominated Convergence Theorem, what is the role of the dominating function g(x)?",
+        options: [
+          "It forces f_n to be strictly increasing.",
+          "It prevents mass from escaping to infinity or spiking with non-vanishing integral.",
+          "It guarantees f_n is differentiable.",
+          "It forces the domain E to be compact."
+        ],
+        answer: 1,
+        explanation: "An integrable envelope |f_n| <= g guarantees uniform integrability and prevents the pathology seen in moving bumps or contracting spikes."
+      },
+      {
+        unit: "Unit VI",
+        q: "What does Jordan's Decomposition Theorem state about a function of Bounded Variation?",
+        options: [
+          "It is always infinitely differentiable.",
+          "It is the difference of two monotonically increasing functions f = g - h.",
+          "It must be equal to 0 almost everywhere.",
+          "Its graph has zero arc length."
+        ],
+        answer: 1,
+        explanation: "Jordan proved f in BV[a, b] iff f(x) = [f(x) + T(x)] - T(x), where both terms are monotonically increasing."
+      },
+      {
+        unit: "Unit VII",
+        q: "The Cantor-Lebesgue (Devil's Staircase) function climbs from 0 to 1, yet F'(x) = 0 almost everywhere. Why does this NOT violate the Fundamental Theorem of Calculus?",
+        options: [
+          "Because FTC for Lebesgue integrals holds if and only if the function is Absolutely Continuous, which the Cantor function is NOT.",
+          "Because the Cantor set is empty.",
+          "Because F is not continuous.",
+          "Because 0 = 1 in measure theory."
+        ],
+        answer: 0,
+        explanation: "The Cantor function is continuous and BV, but fails absolute continuity because all its variation is concentrated on the measure-zero Cantor set."
+      },
+      {
+        unit: "Unit VIII",
+        q: "Why is \(L^p\) not a normed linear space when \(0 < p < 1\)?",
+        options: [
+          "Because functions cannot be raised to powers less than 1.",
+          "Because the triangle inequality (Minkowski's inequality) fails and the unit ball is non-convex.",
+          "Because integrals are always negative.",
+          "Because there are no measurable functions for p < 1."
+        ],
+        answer: 1,
+        explanation: "For p < 1, the unit ball |x|^p + |y|^p <= 1 is concave (star-shaped). The triangle inequality fails, so ||f||_p is not a norm."
+      }
+    ];
+
+    // --- State Management ---
+    let currentUnit = 1;
+    let simAnimationId = null;
+
+    // Simulation Parameters
+    const simState = {
+      // Unit 1
+      u1_n: 3,
+      u1_mode: 'heine', // 'heine' or 'shrink'
+      // Unit 2
+      u2_level: 3,
+      // Unit 3
+      u3_slices: 4,
+      // Unit 4
+      u4_type: 'smooth', // 'smooth' or 'dirichlet'
+      u4_method: 'riemann', // 'riemann' or 'lebesgue'
+      u4_n: 6,
+      // Unit 5
+      u5_wave_shift: 0,
+      u5_env_cap: 1.5,
+      // Unit 6
+      u6_func: 'zigzag',
+      u6_parts: 8,
+      // Unit 7
+      u7_cantor_step: 3,
+      // Unit 8
+      u8_p: 2.0,
+      u8_a: 1.4,
+      u8_b: 1.1
+    };
+
+    // DOM Elements
+    const unitPills = document.querySelectorAll('.unit-pill');
+    const unitBadge = document.getElementById('unit-badge');
+    const unitTitle = document.getElementById('unit-title');
+    const unitContentBody = document.getElementById('unit-content-body');
+    const unitFormulaBox = document.getElementById('unit-formula-box');
+    const simTitle = document.getElementById('sim-title');
+    const simDesc = document.getElementById('sim-desc');
+    const simCanvas = document.getElementById('sim-canvas');
+    const simControls = document.getElementById('sim-controls');
+    const simExplanation = document.getElementById('sim-explanation');
+    const canvasOverlayStats = document.getElementById('canvas-overlay-stats');
+
+    // Canvas context
+    const ctx = simCanvas.getContext('2d');
+
+    // --- Switch Unit Function ---
+    function selectUnit(uNum) {
+      currentUnit = parseInt(uNum);
+      const data = courseData[currentUnit];
+      if (!data) return;
+
+      // Update Pill Styles
+      unitPills.forEach(pill => {
+        if (parseInt(pill.dataset.unit) === currentUnit) {
+          pill.className = "unit-pill px-3 py-1.5 rounded-full font-medium transition unit-pill-active whitespace-nowrap";
+        } else {
+          pill.className = "unit-pill px-3 py-1.5 rounded-full font-medium transition bg-slate-700 text-slate-300 hover:bg-slate-600 whitespace-nowrap";
+        }
+      });
+
+      // Update Text Content
+      unitBadge.innerHTML = data.badge;
+      unitTitle.textContent = data.title;
+      unitContentBody.innerHTML = data.content;
+      unitFormulaBox.innerHTML = data.formulaBox;
+
+      // Update Simulation Header
+      simTitle.textContent = data.simTitle;
+      simDesc.textContent = data.simDesc;
+
+      // Render KaTeX in updated text
+      if (window.renderMathInElement) {
+        renderMathInElement(unitContentBody, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\(', right: '\)', display: false},
+            {left: '\[', right: '\]', display: true}
+          ],
+          throwOnError: false
+        });
+        renderMathInElement(unitFormulaBox, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\(', right: '\)', display: false},
+            {left: '\[', right: '\]', display: true}
+          ],
+          throwOnError: false
+        });
+      }
+
+      // Rebuild Simulation Controls & Redraw
+      buildSimControls(currentUnit);
+      drawSimulation();
+    }
+
+    // --- Dynamic Controls Builder ---
+    function buildSimControls(unit) {
+      simControls.innerHTML = '';
+
+      if (unit === 1) {
+        simControls.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-700">Display Mode:</span>
+            <div class="flex space-x-1">
+              <button id="ctrl-u1-heine" class="px-2.5 py-1 text-xs rounded ${simState.u1_mode === 'heine' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}">Heine-Borel Cover</button>
+              <button id="ctrl-u1-shrink" class="px-2.5 py-1 text-xs rounded ${simState.u1_mode === 'shrink' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}">Shrinking (-1/n, 1/n)</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <label for="u1-n-slider" class="text-xs text-slate-600">Cover Density / \(n\): <strong id="lbl-u1-n">${simState.u1_n}</strong></label>
+            <input type="range" id="u1-n-slider" min="2" max="10" value="${simState.u1_n}" class="w-36 accent-indigo-600">
+          </div>
+        `;
+        document.getElementById('ctrl-u1-heine').addEventListener('click', () => { simState.u1_mode = 'heine'; buildSimControls(1); drawSimulation(); });
+        document.getElementById('ctrl-u1-shrink').addEventListener('click', () => { simState.u1_mode = 'shrink'; buildSimControls(1); drawSimulation(); });
+        document.getElementById('u1-n-slider').addEventListener('input', (e) => {
+          simState.u1_n = parseInt(e.target.value);
+          document.getElementById('lbl-u1-n').textContent = simState.u1_n;
+          drawSimulation();
+        });
+        simExplanation.innerHTML = `<strong>Topology Insight:</strong> ${simState.u1_mode === 'heine' ? 'Every point in [0, 1] is covered by open balls. Heine-Borel guarantees you can discard infinitely many superfluous intervals and retain only a finite subset covering the entire interval.' : 'Each open interval (-1/n, 1/n) is open. As n increases, the intersection shrinks. The infinite intersection is simply {0}, proving infinite intersections of open sets need not be open!'}`;
+      }
+      else if (unit === 2) {
+        simControls.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="u2-level-slider" class="text-xs font-semibold text-slate-700">Cantor Iteration Step \(n\): <strong id="lbl-u2-level">${simState.u2_level}</strong></label>
+              <input type="range" id="u2-level-slider" min="0" max="6" value="${simState.u2_level}" class="w-36 accent-indigo-600">
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-[11px] pt-1">
+              <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                <span class="text-slate-500 block">Remaining Intervals:</span>
+                <strong id="u2-stat-intervals" class="text-indigo-600 text-sm">2^${simState.u2_level} = ${Math.pow(2, simState.u2_level)}</strong>
+              </div>
+              <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                <span class="text-slate-500 block">Remaining Outer Measure:</span>
+                <strong id="u2-stat-measure" class="text-emerald-600 text-sm">${(Math.pow(2/3, simState.u2_level)).toFixed(4)}</strong>
+              </div>
+            </div>
+          </div>
+        `;
+        document.getElementById('u2-level-slider').addEventListener('input', (e) => {
+          simState.u2_level = parseInt(e.target.value);
+          document.getElementById('lbl-u2-level').textContent = simState.u2_level;
+          document.getElementById('u2-stat-intervals').textContent = `2^${simState.u2_level} = ${Math.pow(2, simState.u2_level)}`;
+          document.getElementById('u2-stat-measure').textContent = (Math.pow(2/3, simState.u2_level)).toFixed(4);
+          drawSimulation();
+        });
+        simExplanation.innerHTML = `<strong>Cantor Set Paradox:</strong> At each step, removing the middle-third removes length 1/3, 2/9, 4/27... Summing this geometric series gives exactly 1! The remaining set has measure 0, yet contains every point whose ternary representation has no 1s &mdash; an uncountably infinite set with outer measure zero!`;
+      }
+      else if (unit === 3) {
+        simControls.innerHTML = `
+          <div class="flex items-center justify-between">
+            <label for="u3-slices-slider" class="text-xs font-semibold text-slate-700">Range Slices \(2^n\): <strong id="lbl-u3-slices">${Math.pow(2, simState.u3_slices)}</strong></label>
+            <input type="range" id="u3-slices-slider" min="1" max="5" value="${simState.u3_slices}" class="w-36 accent-indigo-600">
+          </div>
+          <div class="text-[11px] text-slate-500">Horizontal strip width \(\Delta y = 1/2^n = ${(1/Math.pow(2, simState.u3_slices)).toFixed(3)}\)</div>
+        `;
+        document.getElementById('u3-slices-slider').addEventListener('input', (e) => {
+          simState.u3_slices = parseInt(e.target.value);
+          document.getElementById('lbl-u3-slices').textContent = Math.pow(2, simState.u3_slices);
+          drawSimulation();
+        });
+        simExplanation.innerHTML = `<strong>Simple Approximation Lemma:</strong> To approximate any measurable function \(f(x)\), Lebesgue divides the <em>y-axis</em> into equal steps \(k/2^n\). For each slice, the pre-image \(E_k = f^{-1}([y_k, y_{k+1}))\) is a measurable set. The simple step function \(\phi_n(x) = \sum y_k \chi_{E_k}(x)\) climbs monotonically to \(f(x)\)!`;
+      }
+      else if (unit === 4) {
+        simControls.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-700">Integration Method:</span>
+              <div class="flex space-x-1">
+                <button id="ctrl-u4-riemann" class="px-2.5 py-1 text-xs rounded ${simState.u4_method === 'riemann' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}">Riemann (Domain)</button>
+                <button id="ctrl-u4-lebesgue" class="px-2.5 py-1 text-xs rounded ${simState.u4_method === 'lebesgue' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}">Lebesgue (Range)</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-700">Test Function:</span>
+              <div class="flex space-x-1">
+                <button id="ctrl-u4-smooth" class="px-2.5 py-1 text-xs rounded ${simState.u4_type === 'smooth' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'}">Smooth Curve</button>
+                <button id="ctrl-u4-dirichlet" class="px-2.5 py-1 text-xs rounded ${simState.u4_type === 'dirichlet' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'}">Dirichlet \(\chi_\mathbb{Q}\)</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <label for="u4-n-slider" class="text-xs text-slate-600">Partitions \(N\): <strong id="lbl-u4-n">${simState.u4_n}</strong></label>
+              <input type="range" id="u4-n-slider" min="3" max="16" value="${simState.u4_n}" class="w-36 accent-indigo-600">
+            </div>
+          </div>
+        `;
+        document.getElementById('ctrl-u4-riemann').addEventListener('click', () => { simState.u4_method = 'riemann'; buildSimControls(4); drawSimulation(); });
+        document.getElementById('ctrl-u4-lebesgue').addEventListener('click', () => { simState.u4_method = 'lebesgue'; buildSimControls(4); drawSimulation(); });
+        document.getElementById('ctrl-u4-smooth').addEventListener('click', () => { simState.u4_type = 'smooth'; buildSimControls(4); drawSimulation(); });
+        document.getElementById('ctrl-u4-dirichlet').addEventListener('click', () => { simState.u4_type = 'dirichlet'; buildSimControls(4); drawSimulation(); });
+        document.getElementById('u4-n-slider').addEventListener('input', (e) => {
+          simState.u4_n = parseInt(e.target.value);
+          document.getElementById('lbl-u4-n').textContent = simState.u4_n;
+          drawSimulation();
+        });
+        if (simState.u4_type === 'dirichlet') {
+          simExplanation.innerHTML = simState.u4_method === 'riemann' ?
+            `<strong class="text-rose-700">Riemann Fails on Dirichlet!</strong> In every vertical strip \([x_{i-1}, x_i]\), rationals and irrationals are dense. Upper sum \(U = 1\) and Lower sum \(L = 0\). They never converge. The function is NOT Riemann integrable!` :
+            `<strong class="text-emerald-700">Lebesgue Integrates Dirichlet Effortlessly!</strong> Lebesgue groups by value: value 1 occurs on \(\mathbb{Q}\) (measure 0), value 0 occurs on \(\mathbb{R} \setminus \mathbb{Q}\) (measure 1). Integral = 1(0) + 0(1) = 0!`;
+        } else {
+          simExplanation.innerHTML = `<strong>Riemann vs Lebesgue:</strong> Riemann slices the x-axis into vertical columns. Lebesgue slices the y-axis into horizontal layers, weighting each layer height by the measure of its pre-image. For continuous functions, both yield the exact same value!`;
+        }
+      }
+      else if (unit === 5) {
+        simControls.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-700">Simulation View:</span>
+              <div class="flex space-x-1">
+                <button id="ctrl-u5-split" class="px-2.5 py-1 text-xs rounded ${simState.u5_wave_shift === 0 ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}">Positive & Negative Parts (f^+, f^-)</button>
+                <button id="ctrl-u5-ldct" class="px-2.5 py-1 text-xs rounded ${simState.u5_wave_shift === 1 ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}">Dominated Envelope g(x)</button>
+              </div>
+            </div>
+          </div>
+        `;
+        document.getElementById('ctrl-u5-split').addEventListener('click', () => { simState.u5_wave_shift = 0; buildSimControls(5); drawSimulation(); });
+        document.getElementById('ctrl-u5-ldct').addEventListener('click', () => { simState.u5_wave_shift = 1; buildSimControls(5); drawSimulation(); });
+        simExplanation.innerHTML = simState.u5_wave_shift === 0 ?
+          `<strong>General Lebesgue Integral:</strong> Any function is split into \(f^+(x) = \max(f(x), 0)\) (emerald) and \(f^-(x) = \max(-f(x), 0)\) (rose). The integral is \(\int f = \int f^+ - \int f^-\). Notice that \(|f| = f^+ + f^-\).` :
+          `<strong>Lebesgue Dominated Convergence Theorem:</strong> The sequence \(f_n(x)\) (blue) oscillates, but is strictly trapped under the integrable envelope \(g(x)\) (dashed amber). This domination guarantees \(\lim \int f_n = \int \lim f_n\).`;
+      }
+      else if (unit === 6) {
+        simControls.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-semibold text-slate-700">Function Curve:</span>
+              <div class="flex space-x-1">
+                <button id="ctrl-u6-bv" class="px-2.5 py-1 text-xs rounded ${simState.u6_func === 'zigzag' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}">Smooth / BV</button>
+                <button id="ctrl-u6-nonbv" class="px-2.5 py-1 text-xs rounded ${simState.u6_func === 'nonbv' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'}">Non-BV Monster x cos(pi/2x)</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <label for="u6-parts-slider" class="text-xs text-slate-600">Partition Points \(N\): <strong id="lbl-u6-parts">${simState.u6_parts}</strong></label>
+              <input type="range" id="u6-parts-slider" min="4" max="24" value="${simState.u6_parts}" class="w-36 accent-indigo-600">
+            </div>
+          </div>
+        `;
+        document.getElementById('ctrl-u6-bv').addEventListener('click', () => { simState.u6_func = 'zigzag'; buildSimControls(6); drawSimulation(); });
+        document.getElementById('ctrl-u6-nonbv').addEventListener('click', () => { simState.u6_func = 'nonbv'; buildSimControls(6); drawSimulation(); });
+        document.getElementById('u6-parts-slider').addEventListener('input', (e) => {
+          simState.u6_parts = parseInt(e.target.value);
+          document.getElementById('lbl-u6-parts').textContent = simState.u6_parts;
+          drawSimulation();
+        });
+        simExplanation.innerHTML = simState.u6_func === 'nonbv' ?
+          `<strong>The Continuous Non-BV Monster:</strong> \(f(x) = x \cos(\pi / (2x))\) is continuous at 0, but as partition points increase, the sum of absolute changes \(\sum |\Delta f|\) approaches the harmonic series \(1 + 1/2 + 1/3 + \dots = \infty\)! Hence \(TV(f) = \infty\).` :
+          `<strong>Total Variation \(V(f, P)\):</strong> Sums the vertical ascents and descents across the partition. Jordan's theorem proves any function with finite total variation can be written as the difference of two monotonic increasing curves!`;
+      }
+      else if (unit === 7) {
+        simControls.innerHTML = `
+          <div class="flex items-center justify-between">
+            <label for="u7-cantor-slider" class="text-xs font-semibold text-slate-700">Devil's Staircase Recursion: <strong id="lbl-u7-cantor">${simState.u7_cantor_step}</strong></label>
+            <input type="range" id="u7-cantor-slider" min="1" max="5" value="${simState.u7_cantor_step}" class="w-36 accent-indigo-600">
+          </div>
+          <div class="text-[11px] text-slate-500">Derivative is 0 on all flat plateaus (total measure = 1).</div>
+        `;
+        document.getElementById('u7-cantor-slider').addEventListener('input', (e) => {
+          simState.u7_cantor_step = parseInt(e.target.value);
+          document.getElementById('lbl-u7-cantor').textContent = simState.u7_cantor_step;
+          drawSimulation();
+        });
+        simExplanation.innerHTML = `<strong>The Devil's Staircase (Cantor Function):</strong> This function climbs continuously from 0 to 1, but its derivative is 0 on all removed open intervals (which sum to length 1). Thus \(\int_0^1 F'(t) dt = 0 \ne F(1) - F(0) = 1\)! It is continuous and of BV, but NOT Absolutely Continuous!`;
+      }
+      else if (unit === 8) {
+        simControls.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="u8-p-slider" class="text-xs font-semibold text-slate-700">Exponent \(p\): <strong id="lbl-u8-p">${simState.u8_p.toFixed(1)}</strong></label>
+              <input type="range" id="u8-p-slider" min="5" max="60" value="${simState.u8_p * 10}" class="w-36 accent-indigo-600">
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-600">
+              <span>Conjugate Exponent \(q = p/(p-1)\):</span>
+              <strong id="lbl-u8-q" class="text-indigo-600">${simState.u8_p <= 1.05 ? '∞' : (simState.u8_p / (simState.u8_p - 1)).toFixed(2)}</strong>
+            </div>
+          </div>
+        `;
+        document.getElementById('u8-p-slider').addEventListener('input', (e) => {
+          simState.u8_p = parseFloat(e.target.value) / 10;
+          document.getElementById('lbl-u8-p').textContent = simState.u8_p.toFixed(1);
+          document.getElementById('lbl-u8-q').textContent = simState.u8_p <= 1.05 ? '∞' : (simState.u8_p / (simState.u8_p - 1)).toFixed(2);
+          drawSimulation();
+        });
+        simExplanation.innerHTML = `<strong>L^p Unit Ball Geometry & Young's Inequality:</strong> When \(p < 1\) (e.g. 0.5), the unit ball \(|x|^p + |y|^p \le 1\) is non-convex (inward-curving star), violating the triangle inequality! When \(p = 1\), it is a diamond; \(p = 2\) is the Euclidean circle; and as \(p \to \infty\), it squares out. Only for \(p \ge 1\) is \(L^p\) a normed space (Minkowski's Inequality).`;
+      }
+    }
+
+    // --- Master Simulation Canvas Drawing Routine ---
+    function drawSimulation() {
+      const W = simCanvas.width;
+      const H = simCanvas.height;
+      ctx.clearRect(0, 0, W, H);
+
+      // Background
+      ctx.fillStyle = "#0f172a"; // Slate 900
+      ctx.fillRect(0, 0, W, H);
+
+      if (currentUnit === 1) {
+        drawUnit1Sim(W, H);
+      } else if (currentUnit === 2) {
+        drawUnit2Sim(W, H);
+      } else if (currentUnit === 3) {
+        drawUnit3Sim(W, H);
+      } else if (currentUnit === 4) {
+        drawUnit4Sim(W, H);
+      } else if (currentUnit === 5) {
+        drawUnit5Sim(W, H);
+      } else if (currentUnit === 6) {
+        drawUnit6Sim(W, H);
+      } else if (currentUnit === 7) {
+        drawUnit7Sim(W, H);
+      } else if (currentUnit === 8) {
+        drawUnit8Sim(W, H);
+      }
+    }
+
+    // --- Simulation 1: Heine-Borel & Shrinking Intervals ---
+    function drawUnit1Sim(W, H) {
+      const margin = 50;
+      const lineY = H * 0.65;
+      const x0 = margin;
+      const x1 = W - margin;
+      const len = x1 - x0;
+
+      // Draw real axis
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(20, lineY);
+      ctx.lineTo(W - 20, lineY);
+      ctx.stroke();
+
+      if (simState.u1_mode === 'heine') {
+        // [a, b] segment
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(x0, lineY);
+        ctx.lineTo(x1, lineY);
+        ctx.stroke();
+
+        // Endpoints a and b
+        ctx.fillStyle = "#38bdf8";
+        ctx.beginPath(); ctx.arc(x0, lineY, 6, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(x1, lineY, 6, 0, Math.PI*2); ctx.fill();
+
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "12px sans-serif";
+        ctx.fillText("a = 0", x0 - 15, lineY + 25);
+        ctx.fillText("b = 1", x1 - 15, lineY + 25);
+
+        // Draw open cover intervals
+        const n = simState.u1_n;
+        const radius = len / (n - 0.5);
+        const colors = ["#a855f7", "#ec4899", "#10b981", "#f59e0b", "#6366f1", "#14b8a6", "#f43f5e", "#84cc16", "#06b6d4", "#eab308"];
+
+        for (let i = 0; i < n; i++) {
+          const center = x0 + (i / (n - 1)) * len;
+          const left = center - radius * 0.6;
+          const right = center + radius * 0.6;
+          const arcY = lineY - 30 - (i % 3) * 22;
+
+          ctx.strokeStyle = colors[i % colors.length];
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(Math.max(20, left), arcY);
+          ctx.lineTo(Math.min(W - 20, right), arcY);
+          ctx.stroke();
+
+          // End ticks
+          ctx.beginPath();
+          ctx.arc(Math.max(20, left), arcY, 3, 0, Math.PI*2);
+          ctx.arc(Math.min(W - 20, right), arcY, 3, 0, Math.PI*2);
+          ctx.stroke();
+
+          // Projection lines to axis
+          ctx.strokeStyle = colors[i % colors.length] + "44";
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(center, arcY);
+          ctx.lineTo(center, lineY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        canvasOverlayStats.innerHTML = `Covering [0, 1] with ${n} open sets &bull; Finite Subcover extracted!`;
+      } else {
+        // Shrinking (-1/n, 1/n)
+        const originX = W / 2;
+        ctx.fillStyle = "#f59e0b";
+        ctx.beginPath(); ctx.arc(originX, lineY, 6, 0, Math.PI*2); ctx.fill();
+        ctx.font = "13px sans-serif";
+        ctx.fillText("0", originX - 4, lineY + 22);
+
+        const n = simState.u1_n;
+        for (let k = 1; k <= n; k++) {
+          const r = (len * 0.45) / k;
+          const y = lineY - 20 - (k - 1) * 20;
+
+          ctx.strokeStyle = k === n ? "#10b981" : "#64748b";
+          ctx.lineWidth = k === n ? 3 : 1.5;
+          ctx.beginPath();
+          ctx.moveTo(originX - r, y);
+          ctx.lineTo(originX + r, y);
+          ctx.stroke();
+
+          ctx.fillStyle = k === n ? "#10b981" : "#94a3b8";
+          ctx.fillText(`(-1/${k}, 1/${k})`, originX + r + 8, y + 4);
+        }
+
+        canvasOverlayStats.innerHTML = `At step n = ${n}: Width = 2/${n} &bull; As n &rarr; &infin;, &Intersection; (-1/n, 1/n) = {0}`;
+      }
+    }
+
+    // --- Simulation 2: Cantor Set ---
+    function drawUnit2Sim(W, H) {
+      const level = simState.u2_level;
+      const startY = 35;
+      const rowHeight = Math.min(36, (H - 70) / (level + 1));
+      const margin = 40;
+      const totalWidth = W - 2 * margin;
+
+      ctx.font = "11px monospace";
+
+      for (let curL = 0; curL <= level; curL++) {
+        const y = startY + curL * rowHeight;
+        const numSegments = Math.pow(2, curL);
+        const segLen = totalWidth / Math.pow(3, curL);
+
+        ctx.fillStyle = "#94a3b8";
+        ctx.fillText(`L${curL}`, 10, y + 6);
+
+        ctx.fillStyle = curL === level ? "#34d399" : "#60a5fa";
+
+        // Recursive intervals
+        function drawCantorInterval(x, w, step) {
+          if (step === 0) {
+            ctx.fillRect(x, y, w, 8);
+            return;
+          }
+          const subW = w / 3;
+          drawCantorInterval(x, subW, step - 1);
+          drawCantorInterval(x + 2 * subW, subW, step - 1);
+        }
+
+        drawCantorInterval(margin, totalWidth, curL);
+      }
+
+      const remMeasure = Math.pow(2/3, level);
+      canvasOverlayStats.innerHTML = `Step ${level}: Remaining Intervals = ${Math.pow(2, level)} &bull; Length = (2/3)^${level} = ${remMeasure.toFixed(4)}`;
+    }
+
+    // --- Simulation 3: Simple Function Approximation ---
+    function drawUnit3Sim(W, H) {
+      const margin = 45;
+      const plotW = W - 2 * margin;
+      const plotH = H - 2 * margin;
+      const ox = margin;
+      const oy = H - margin;
+
+      // Axes
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(ox, oy); ctx.lineTo(ox + plotW, oy);
+      ctx.moveTo(ox, oy); ctx.lineTo(ox, oy - plotH);
+      ctx.stroke();
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "11px sans-serif";
+      ctx.fillText("0", ox - 12, oy + 15);
+      ctx.fillText("x", ox + plotW + 5, oy + 5);
+      ctx.fillText("y", ox - 5, oy - plotH - 8);
+
+      // Target curve f(x) = (x/1.2)^2 on [0, 1]
+      function f(x) {
+        return Math.sin(x * Math.PI * 0.85) * 0.8 + 0.15;
+      }
+
+      // Draw horizontal slices on Y-axis
+      const numSlices = Math.pow(2, simState.u3_slices);
+      const dy = 1.0 / numSlices;
+
+      for (let k = 0; k < numSlices; k++) {
+        const yVal = k * dy;
+        const screenY = oy - yVal * plotH;
+        ctx.strokeStyle = "#334155";
+        ctx.setLineDash([2, 4]);
+        ctx.beginPath();
+        ctx.moveTo(ox, screenY);
+        ctx.lineTo(ox + plotW, screenY);
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      // Draw simple function approximation phi_n(x)
+      ctx.fillStyle = "rgba(99, 102, 241, 0.35)";
+      ctx.strokeStyle = "#818cf8";
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      for (let px = 0; px <= plotW; px += 2) {
+        const normX = px / plotW;
+        const fVal = f(normX);
+        const stepVal = Math.floor(fVal / dy) * dy;
+        const screenY = oy - stepVal * plotH;
+
+        if (px === 0) {
+          ctx.moveTo(ox + px, screenY);
+        } else {
+          ctx.lineTo(ox + px, screenY);
+        }
+      }
+      ctx.stroke();
+
+      // Original smooth curve f(x)
+      ctx.strokeStyle = "#f59e0b";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let px = 0; px <= plotW; px += 2) {
+        const normX = px / plotW;
+        const fVal = f(normX);
+        const screenY = oy - fVal * plotH;
+        if (px === 0) ctx.moveTo(ox + px, screenY);
+        else ctx.lineTo(ox + px, screenY);
+      }
+      ctx.stroke();
+
+      canvasOverlayStats.innerHTML = `Range Slices: 2^${simState.u3_slices} = ${numSlices} &bull; Yellow = f(x), Violet = Simple &phi;_n(x) &le; f(x)`;
+    }
+
+    // --- Simulation 4: Riemann vs Lebesgue Showdown ---
+    function drawUnit4Sim(W, H) {
+      const margin = 45;
+      const plotW = W - 2 * margin;
+      const plotH = H - 2 * margin;
+      const ox = margin;
+      const oy = H - margin;
+
+      // Axes
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(ox, oy); ctx.lineTo(ox + plotW, oy);
+      ctx.moveTo(ox, oy); ctx.lineTo(ox, oy - plotH);
+      ctx.stroke();
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "11px sans-serif";
+      ctx.fillText("0", ox - 12, oy + 15);
+      ctx.fillText("1", ox + plotW - 4, oy + 15);
+
+      if (simState.u4_type === 'dirichlet') {
+        // Dirichlet Function
+        if (simState.u4_method === 'riemann') {
+          // Riemann partition showing oscillating upper and lower rectangles
+          const N = simState.u4_n;
+          const dx = plotW / N;
+
+          for (let i = 0; i < N; i++) {
+            // Upper box (height 1)
+            ctx.fillStyle = "rgba(239, 68, 68, 0.25)";
+            ctx.strokeStyle = "#ef4444";
+            ctx.lineWidth = 1;
+            ctx.fillRect(ox + i * dx, oy - plotH * 0.7, dx, plotH * 0.7);
+            ctx.strokeRect(ox + i * dx, oy - plotH * 0.7, dx, plotH * 0.7);
+
+            // Lower line (height 0)
+            ctx.strokeStyle = "#10b981";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(ox + i * dx, oy);
+            ctx.lineTo(ox + (i+1) * dx, oy);
+            ctx.stroke();
+          }
+
+          ctx.fillStyle = "#f87171";
+          ctx.fillText("Upper Sum U(f, P) = 1.00", ox + 20, oy - plotH * 0.8);
+          ctx.fillStyle = "#34d399";
+          ctx.fillText("Lower Sum L(f, P) = 0.00", ox + 20, oy - plotH * 0.8 + 18);
+          canvasOverlayStats.innerHTML = `<span class="text-rose-400">U(f,P) &ne; L(f,P)</span> &bull; Riemann Integral DOES NOT EXIST!`;
+        } else {
+          // Lebesgue Range Partition for Dirichlet
+          ctx.fillStyle = "rgba(16, 185, 129, 0.2)";
+          ctx.fillRect(ox, oy - 2, plotW, 4);
+
+          // Range values: 0 and 1
+          ctx.fillStyle = "#38bdf8";
+          ctx.beginPath(); ctx.arc(ox - 10, oy, 5, 0, Math.PI*2); ctx.fill();
+          ctx.beginPath(); ctx.arc(ox - 10, oy - plotH * 0.7, 5, 0, Math.PI*2); ctx.fill();
+
+          ctx.fillStyle = "#e2e8f0";
+          ctx.fillText("Value 0 on [0,1] \ Q (m = 1)", ox + 15, oy - 15);
+          ctx.fillText("Value 1 on Q (m = 0)", ox + 15, oy - plotH * 0.7 - 8);
+
+          // Draw dotted points for rationals
+          ctx.fillStyle = "#f59e0b";
+          for (let k = 1; k < 60; k++) {
+            const rx = ox + (k / 60) * plotW;
+            ctx.fillRect(rx - 1, oy - plotH * 0.7 - 1, 3, 3);
+          }
+
+          canvasOverlayStats.innerHTML = `Lebesgue: &int; &chi;_Q = 1&middot;m(Q) + 0&middot;m(Q^c) = 1(0) + 0(1) = 0.00`;
+        }
+      } else {
+        // Smooth function f(x)
+        function f(x) { return Math.sin(x * Math.PI) * 0.7 + 0.15; }
+
+        if (simState.u4_method === 'riemann') {
+          // Vertical columns
+          const N = simState.u4_n;
+          const dx = plotW / N;
+          ctx.fillStyle = "rgba(99, 102, 241, 0.25)";
+          ctx.strokeStyle = "#818cf8";
+          ctx.lineWidth = 1;
+
+          for (let i = 0; i < N; i++) {
+            const midX = (i + 0.5) / N;
+            const h = f(midX) * plotH;
+            ctx.fillRect(ox + i * dx, oy - h, dx, h);
+            ctx.strokeRect(ox + i * dx, oy - h, dx, h);
+          }
+        } else {
+          // Horizontal layers
+          const N = simState.u4_n;
+          const dy = 0.85 / N;
+
+          for (let j = 0; j < N; j++) {
+            const yMid = (j + 0.5) * dy;
+            const screenY = oy - (j + 1) * dy * plotH;
+            const stripH = dy * plotH;
+
+            // pre-image width where f(x) >= yMid
+            // For sin(pi*x) * 0.7 + 0.15 >= yMid
+            const target = (yMid - 0.15) / 0.7;
+            if (target <= 1 && target >= 0) {
+              const asinVal = Math.asin(target) / Math.PI;
+              const leftX = asinVal * plotW;
+              const rightX = (1 - asinVal) * plotW;
+              const width = Math.max(0, rightX - leftX);
+
+              ctx.fillStyle = "rgba(16, 185, 129, 0.3)";
+              ctx.strokeStyle = "#34d399";
+              ctx.lineWidth = 1;
+              ctx.fillRect(ox + leftX, screenY, width, stripH);
+              ctx.strokeRect(ox + leftX, screenY, width, stripH);
+            }
+          }
+        }
+
+        // Draw curve
+        ctx.strokeStyle = "#f59e0b";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let px = 0; px <= plotW; px += 2) {
+          const sy = oy - f(px / plotW) * plotH;
+          if (px === 0) ctx.moveTo(ox + px, sy);
+          else ctx.lineTo(ox + px, sy);
+        }
+        ctx.stroke();
+
+        canvasOverlayStats.innerHTML = `${simState.u4_method === 'riemann' ? 'Domain partitioning: Vertical rectangles' : 'Range partitioning: Horizontal pre-image slices'} &bull; N = ${simState.u4_n}`;
+      }
+    }
+
+    // --- Simulation 5: General Lebesgue Integral & LDCT ---
+    function drawUnit5Sim(W, H) {
+      const margin = 45;
+      const plotW = W - 2 * margin;
+      const plotH = H - 2 * margin;
+      const ox = margin;
+      const midY = H / 2;
+
+      // Axes
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(ox, midY); ctx.lineTo(ox + plotW, midY);
+      ctx.moveTo(ox, margin); ctx.lineTo(ox, H - margin);
+      ctx.stroke();
+
+      if (simState.u5_wave_shift === 0) {
+        // Positive & Negative Split f = f^+ - f^-
+        function wave(x) { return Math.sin(x * Math.PI * 2) * (plotH * 0.4); }
+
+        // Draw f^+ (green fill)
+        ctx.fillStyle = "rgba(16, 185, 129, 0.3)";
+        ctx.beginPath();
+        ctx.moveTo(ox, midY);
+        for (let px = 0; px <= plotW; px += 2) {
+          const val = wave(px / plotW);
+          const y = val > 0 ? midY - val : midY;
+          ctx.lineTo(ox + px, y);
+        }
+        ctx.lineTo(ox + plotW, midY);
+        ctx.fill();
+
+        // Draw f^- (rose fill)
+        ctx.fillStyle = "rgba(244, 63, 94, 0.3)";
+        ctx.beginPath();
+        ctx.moveTo(ox, midY);
+        for (let px = 0; px <= plotW; px += 2) {
+          const val = wave(px / plotW);
+          const y = val < 0 ? midY - val : midY;
+          ctx.lineTo(ox + px, y);
+        }
+        ctx.lineTo(ox + plotW, midY);
+        ctx.fill();
+
+        // Outline original f
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let px = 0; px <= plotW; px += 2) {
+          const y = midY - wave(px / plotW);
+          if (px === 0) ctx.moveTo(ox + px, y);
+          else ctx.lineTo(ox + px, y);
+        }
+        ctx.stroke();
+
+        ctx.fillStyle = "#34d399";
+        ctx.fillText("f+(x) = max(f, 0)", ox + 30, midY - 45);
+        ctx.fillStyle = "#fb7185";
+        ctx.fillText("f-(x) = max(-f, 0)", ox + plotW * 0.6, midY + 55);
+
+        canvasOverlayStats.innerHTML = `f = f^+ - f^- &bull; |f| = f^+ + f^- &bull; Integrable iff &int; |f| < &infin;`;
+      } else {
+        // LDCT Envelope g(x)
+        const envelope = (x) => (plotH * 0.42) / (1 + 2 * x);
+
+        // Draw envelope g(x) and -g(x)
+        ctx.strokeStyle = "#f59e0b";
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let px = 0; px <= plotW; px += 2) {
+          const env = envelope(px / plotW);
+          if (px === 0) ctx.moveTo(ox + px, midY - env);
+          else ctx.lineTo(ox + px, midY - env);
+        }
+        ctx.stroke();
+
+        ctx.beginPath();
+        for (let px = 0; px <= plotW; px += 2) {
+          const env = envelope(px / plotW);
+          if (px === 0) ctx.moveTo(ox + px, midY + env);
+          else ctx.lineTo(ox + px, midY + env);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Draw trapped f_n(x)
+        ctx.strokeStyle = "#60a5fa";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let px = 0; px <= plotW; px += 2) {
+          const normX = px / plotW;
+          const env = envelope(normX);
+          const fnVal = Math.sin(normX * 18) * (env * 0.7);
+          if (px === 0) ctx.moveTo(ox + px, midY - fnVal);
+          else ctx.lineTo(ox + px, midY - fnVal);
+        }
+        ctx.stroke();
+
+        ctx.fillStyle = "#f59e0b";
+        ctx.fillText("+g(x) [Dominating Envelope]", ox + plotW * 0.5, midY - 60);
+        ctx.fillText("-g(x)", ox + plotW * 0.5, midY + 65);
+        ctx.fillStyle = "#60a5fa";
+        ctx.fillText("f_n(x) trapped inside", ox + 20, midY - 15);
+
+        canvasOverlayStats.innerHTML = `|f_n(x)| &le; g(x) &bull; Dominance enforces lim &int; f_n = &int; lim f_n`;
+      }
+    }
+
+    // --- Simulation 6: Total Variation & BV ---
+    function drawUnit6Sim(W, H) {
+      const margin = 45;
+      const plotW = W - 2 * margin;
+      const plotH = H - 2 * margin;
+      const ox = margin;
+      const oy = H - margin;
+
+      // Axes
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(ox, oy); ctx.lineTo(ox + plotW, oy);
+      ctx.moveTo(ox, oy); ctx.lineTo(ox, oy - plotH);
+      ctx.stroke();
+
+      const N = simState.u6_parts;
+      let func = null;
+
+      if (simState.u6_func === 'zigzag') {
+        func = (x) => Math.sin(x * 6) * 0.35 + 0.45;
+      } else {
+        // x cos(pi / (2x))
+        func = (x) => {
+          if (x <= 0.005) return 0;
+          return (x * Math.cos(Math.PI / (2 * x))) * 0.45 + 0.45;
+        };
+      }
+
+      // Draw partition points and step variation
+      let totalV = 0;
+      const pts = [];
+      for (let i = 0; i <= N; i++) {
+        const x = i / N;
+        const y = func(x);
+        pts.push({ x: ox + x * plotW, y: oy - y * plotH, val: y });
+        if (i > 0) {
+          totalV += Math.abs(pts[i].val - pts[i-1].val);
+        }
+      }
+
+      // Draw variation chords (lines between partition points)
+      ctx.strokeStyle = "#ec4899";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      pts.forEach((p, idx) => {
+        if (idx === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.stroke();
+
+      // Draw points
+      ctx.fillStyle = "#f43f5e";
+      pts.forEach(p => {
+        ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fill();
+      });
+
+      // Draw actual function underneath
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let px = 0; px <= plotW; px += 2) {
+        const x = px / plotW;
+        const sy = oy - func(x) * plotH;
+        if (px === 0) ctx.moveTo(ox + px, sy);
+        else ctx.lineTo(ox + px, sy);
+      }
+      ctx.stroke();
+
+      canvasOverlayStats.innerHTML = `Partition N = ${N} &bull; Variation V(f, P) = ${totalV.toFixed(3)} ${simState.u6_func === 'nonbv' ? '(Diverges to &infin;!)' : '(Bounded)'}`;
+    }
+
+    // --- Simulation 7: The Devil's Staircase ---
+    function drawUnit7Sim(W, H) {
+      const margin = 45;
+      const plotW = W - 2 * margin;
+      const plotH = H - 2 * margin;
+      const ox = margin;
+      const oy = H - margin;
+
+      // Axes
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(ox, oy); ctx.lineTo(ox + plotW, oy);
+      ctx.moveTo(ox, oy); ctx.lineTo(ox, oy - plotH);
+      ctx.stroke();
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "11px sans-serif";
+      ctx.fillText("(0,0)", ox - 20, oy + 15);
+      ctx.fillText("(1,1)", ox + plotW - 5, oy - plotH - 5);
+
+      const maxDepth = simState.u7_cantor_step;
+
+      function getCantorVal(x, depth) {
+        let yLow = 0, yHigh = 1;
+        let xLow = 0, xHigh = 1;
+        for (let d = 0; d < depth; d++) {
+          const l1 = xLow + (xHigh - xLow) / 3;
+          const r1 = xLow + 2 * (xHigh - xLow) / 3;
+          const yMid = (yLow + yHigh) / 2;
+
+          if (x >= l1 && x <= r1) {
+            return yMid;
+          } else if (x < l1) {
+            xHigh = l1;
+            yHigh = yMid;
+          } else {
+            xLow = r1;
+            yLow = yMid;
+          }
+        }
+        return (yLow + yHigh) / 2;
+      }
+
+      ctx.strokeStyle = "#34d399";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let px = 0; px <= plotW; px += 2) {
+        const x = px / plotW;
+        const y = getCantorVal(x, maxDepth);
+        const sy = oy - y * plotH;
+        if (px === 0) ctx.moveTo(ox + px, sy);
+        else ctx.lineTo(ox + px, sy);
+      }
+      ctx.stroke();
+
+      // Highlight horizontal plateaus where F'(x) = 0
+      ctx.fillStyle = "rgba(245, 158, 11, 0.25)";
+      const l1 = ox + plotW / 3;
+      const r1 = ox + 2 * plotW / 3;
+      ctx.fillRect(l1, oy - plotH / 2 - 4, r1 - l1, 8);
+
+      ctx.fillStyle = "#f59e0b";
+      ctx.font = "11px sans-serif";
+      ctx.fillText("F'(x) = 0 on middle-third (y=1/2)", l1 + 10, oy - plotH / 2 - 10);
+
+      canvasOverlayStats.innerHTML = `Cantor Function (Depth ${maxDepth}): F(1) - F(0) = 1, but &int; F' = 0 &bull; NOT Absolutely Continuous!`;
+    }
+
+    // --- Simulation 8: L^p Unit Balls & Young's Inequality ---
+    function drawUnit8Sim(W, H) {
+      const p = simState.u8_p;
+      const cx = W / 2;
+      const cy = H / 2;
+      const R = Math.min(W, H) * 0.38;
+
+      // Axes
+      ctx.strokeStyle = "#334155";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx - R * 1.3, cy); ctx.lineTo(cx + R * 1.3, cy);
+      ctx.moveTo(cx, cy - R * 1.3); ctx.lineTo(cx, cy + R * 1.3);
+      ctx.stroke();
+
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "11px sans-serif";
+      ctx.fillText("1", cx + R - 3, cy + 15);
+      ctx.fillText("-1", cx - R - 10, cy + 15);
+      ctx.fillText("1", cx + 8, cy - R + 5);
+      ctx.fillText("-1", cx + 8, cy + R + 5);
+
+      // Draw L^p unit ball: |x|^p + |y|^p = 1
+      ctx.fillStyle = p < 1 ? "rgba(239, 68, 68, 0.25)" : "rgba(99, 102, 241, 0.25)";
+      ctx.strokeStyle = p < 1 ? "#ef4444" : "#818cf8";
+      ctx.lineWidth = 2.5;
+
+      ctx.beginPath();
+      const steps = 360;
+      for (let i = 0; i <= steps; i++) {
+        const theta = (i / steps) * Math.PI * 2;
+        const cosT = Math.cos(theta);
+        const sinT = Math.sin(theta);
+
+        // |r cos|^p + |r sin|^p = 1 => r = 1 / (|cos|^p + |sin|^p)^(1/p)
+        const denom = Math.pow(Math.pow(Math.abs(cosT), p) + Math.pow(Math.abs(sinT), p), 1 / p);
+        const r = R / denom;
+
+        const px = cx + r * cosT;
+        const py = cy - r * sinT;
+
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      const q = p <= 1.05 ? Infinity : p / (p - 1);
+      const qStr = q === Infinity ? '&infin;' : q.toFixed(2);
+      const convexityStr = p < 1 ? '<span class="text-rose-400 font-bold">Non-Convex (Norm Fails)</span>' : '<span class="text-emerald-400 font-bold">Convex Banach Space</span>';
+
+      canvasOverlayStats.innerHTML = `p = ${p.toFixed(1)}, q = ${qStr} &bull; ${convexityStr}`;
+    }
+
+    // --- Quiz Logic ---
+    function initQuiz() {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = '';
+
+      quizQuestions.forEach((item, qIdx) => {
+        const card = document.createElement('div');
+        card.className = "p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-3";
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">${item.unit}</span>
+            <span id="quiz-status-${qIdx}" class="text-xs font-semibold text-slate-400">Unanswered</span>
+          </div>
+          <p class="text-xs md:text-sm font-semibold text-slate-900">${item.q}</p>
+          <div class="space-y-1.5" id="opts-${qIdx}">
+            ${item.options.map((opt, oIdx) => `
+              <button data-q="${qIdx}" data-o="${oIdx}" class="quiz-opt-btn w-full text-left p-2.5 rounded-lg border border-slate-200 bg-white hover:bg-indigo-50 text-xs text-slate-700 transition flex items-start gap-2">
+                <span class="w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center text-[10px] text-slate-500 font-bold mt-0.5">${String.fromCharCode(65 + oIdx)}</span>
+                <span class="flex-1">${opt}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div id="quiz-exp-${qIdx}" class="hidden p-2.5 rounded-lg text-xs leading-relaxed"></div>
+        `;
+        container.appendChild(card);
+      });
+
+      // Bind button events
+      container.querySelectorAll('.quiz-opt-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const qIdx = parseInt(btn.dataset.q);
+          const oIdx = parseInt(btn.dataset.o);
+          checkQuizAnswer(qIdx, oIdx);
+        });
+      });
+
+      if (window.renderMathInElement) {
+        renderMathInElement(container, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\(', right: '\)', display: false},
+            {left: '\[', right: '\]', display: true}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    function checkQuizAnswer(qIdx, oIdx) {
+      const q = quizQuestions[qIdx];
+      const optBtns = document.querySelectorAll(`#opts-${qIdx} .quiz-opt-btn`);
+      const statusLbl = document.getElementById(`quiz-status-${qIdx}`);
+      const expDiv = document.getElementById(`quiz-exp-${qIdx}`);
+
+      optBtns.forEach(btn => btn.disabled = true);
+
+      if (oIdx === q.answer) {
+        statusLbl.innerHTML = '<span class="text-emerald-600 font-bold">&check; Correct!</span>';
+        expDiv.className = "p-2.5 rounded-lg text-xs bg-emerald-50 border border-emerald-200 text-emerald-900 block";
+        expDiv.innerHTML = `<strong>Correct:</strong> ${q.explanation}`;
+        optBtns[oIdx].classList.add('bg-emerald-100', 'border-emerald-400', 'text-emerald-900');
+      } else {
+        statusLbl.innerHTML = '<span class="text-rose-600 font-bold">&cross; Incorrect</span>';
+        expDiv.className = "p-2.5 rounded-lg text-xs bg-rose-50 border border-rose-200 text-rose-900 block";
+        expDiv.innerHTML = `<strong>Explanation:</strong> ${q.explanation}`;
+        optBtns[oIdx].classList.add('bg-rose-100', 'border-rose-400', 'text-rose-900');
+        optBtns[q.answer].classList.add('bg-emerald-50', 'border-emerald-300', 'text-emerald-800');
+      }
+
+      updateQuizScore();
+    }
+
+    function updateQuizScore() {
+      let correct = 0;
+      let totalAnswered = 0;
+      quizQuestions.forEach((q, idx) => {
+        const status = document.getElementById(`quiz-status-${idx}`);
+        if (status.textContent.includes('Correct')) { correct++; totalAnswered++; }
+        else if (status.textContent.includes('Incorrect')) { totalAnswered++; }
+      });
+      document.getElementById('quiz-score').textContent = `Score: ${correct} / ${quizQuestions.length} (${totalAnswered} completed)`;
+    }
+
+    // --- Wire Event Handlers ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Unit pills click
+      unitPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          selectUnit(pill.dataset.unit);
+        });
+      });
+
+      // Jump to sim button
+      document.getElementById('btn-jump-sim').addEventListener('click', () => {
+        document.getElementById('visual-pane').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Quiz modal controls
+      const quizModal = document.getElementById('quiz-modal');
+      document.getElementById('btn-quiz-view').addEventListener('click', () => {
+        quizModal.classList.remove('hidden');
+        initQuiz();
+      });
+      document.getElementById('btn-close-quiz').addEventListener('click', () => {
+        quizModal.classList.add('hidden');
+      });
+      document.getElementById('btn-reset-quiz').addEventListener('click', () => {
+        initQuiz();
+        document.getElementById('quiz-score').textContent = "Answer questions to evaluate score";
+      });
+
+      // Syllabus & Lab toggles
+      document.getElementById('btn-syllabus-view').addEventListener('click', () => {
+        document.getElementById('teaching-pane').scrollIntoView({ behavior: 'smooth' });
+      });
+      document.getElementById('btn-visual-lab').addEventListener('click', () => {
+        document.getElementById('visual-pane').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Responsive Canvas resize handling
+      function resizeCanvas() {
+        const container = simCanvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        if (rect.width > 0) {
+          simCanvas.width = rect.width;
+          simCanvas.height = Math.max(300, Math.min(360, rect.width * 0.65));
+          drawSimulation();
+        }
+      }
+      window.addEventListener('resize', resizeCanvas);
+
+      // Initial Unit Load
+      selectUnit(1);
+      resizeCanvas();
+    });
+  </script>
+</body>
+</html>
+```
